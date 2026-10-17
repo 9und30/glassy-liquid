@@ -214,7 +214,7 @@
     "vite": "^6.4.4",
     "vite-node": "^3.2.4",
     "vitest": "^4.1.11",
-    "vue": "^3.5.43"
+    "vue": "^3.5.44"
   },
   "repository": {
     "type": "git",
