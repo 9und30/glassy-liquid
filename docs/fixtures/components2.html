@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>components test 2</title>
+<style>
+  html,body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Inter",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  body{background:#000 url(../img/city.webp) center/cover fixed;min-height:100vh}
+  glass-button svg{width:20px;height:20px}
+  .top{position:fixed;top:16px;left:16px;right:16px}
+  .bottom{position:fixed;bottom:24px;left:16px;right:16px;display:flex;gap:10px}
+  .bottom glass-search{flex:1}
+</style>
+</head>
+<body>
+<glass-progressive-blur edge="top" size="110" style="position:fixed"></glass-progressive-blur>
+<glass-toolbar class="top">
+  <glass-button shape="circle" aria-label="Back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></glass-button>
+  <glass-spacer></glass-spacer>
+  <glass-group>
+    <glass-button variant="plain" shape="circle" aria-label="Share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M8 7l4-4 4 4M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg></glass-button>
+    <glass-button variant="plain" shape="circle" aria-label="Favorite"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-4.6-9.3-9A5.4 5.4 0 0 1 12 6a5.4 5.4 0 0 1 9.3 6c-2.3 4.4-9.3 9-9.3 9z"/></svg></glass-button>
+  </glass-group>
+  <glass-menu placement="bottom-end" id="menu">
+    <glass-button slot="trigger" shape="circle" aria-label="More"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg></glass-button>
+    <glass-menu-label>Sort by</glass-menu-label>
+    <glass-menu-item value="name" checked group="sort">Name</glass-menu-item>
+    <glass-menu-item value="date" checkable group="sort">Date Modified</glass-menu-item>
+    <glass-menu-separator></glass-menu-separator>
+    <glass-menu-item value="share">Share <svg slot="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3v12M8 7l4-4 4 4M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg></glass-menu-item>
+    <glass-menu-item value="duplicate">Duplicate <svg slot="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M4 16V6a2 2 0 0 1 2-2h10"/></svg></glass-menu-item>
+    <glass-menu-item value="delete" destructive>Delete <svg slot="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg></glass-menu-item>
+  </glass-menu>
+</glass-toolbar>
+<div class="bottom">
+  <glass-search placeholder="Search"></glass-search>
+  <glass-button shape="circle" aria-label="Open sheet" id="opensheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 12h16M12 4v16"/></svg></glass-button>
+</div>
+<glass-sheet id="sheet" detents="medium large" aria-label="Details">
+  <h2 style="margin:6px 0 4px;font-size:22px">Neon street</h2>
+  <p style="margin:0 0 16px;opacity:.7">Drag the grabber to resize, swipe down to dismiss.</p>
+  <div style="display:flex;gap:10px"><glass-button variant="prominent">Directions</glass-button><glass-button>Save</glass-button></div>
+</glass-sheet>
+<script type="module">
+  import "glassy-liquid/elements";
+  document.getElementById("opensheet").addEventListener("click", () => document.getElementById("sheet").show());
+  const q = new URLSearchParams(location.search);
+  if (q.get("appearance")) document.documentElement.style.setProperty("--glass-appearance", q.get("appearance"));
+</script>
+</body>
+</html>

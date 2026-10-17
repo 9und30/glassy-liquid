@@ -1,0 +1,78 @@
+{
+  "metrics": [
+    {
+      "value": "{{cdn-gzip}}",
+      "label": "gzip for every component, all renderers and the WebGL path",
+      "detail": "@glass-sdk/liquid-glass: 99.8 kB DOM entry · 189.2 kB React entry, React itself excluded"
+    },
+    {
+      "value": "99 ms",
+      "label": "to set up 16 glass surfaces",
+      "detail": "@glass-sdk/liquid-glass: 355 ms, generating maps with WebGPU on a real GPU"
+    },
+    {
+      "value": "60 fps",
+      "label": "while content scrolls under 16 surfaces",
+      "detail": "@glass-sdk/liquid-glass: 15 fps · p95 frame 16.8 vs 83.4 ms"
+    },
+    {
+      "value": "60 fps",
+      "label": "while 16 surfaces resize every frame",
+      "detail": "@glass-sdk/liquid-glass: 10 fps · nine-slice maps never re-encode on resize"
+    }
+  ],
+  "note": "Headless Chrome 154.0.8037.92 with GPU and WebGPU enabled, 16 glass surfaces over a photo with live text, device pixel ratio 2, median of 3 runs, 2026-10-15. Frame rate is capped at the display refresh (60 Hz) on the measuring machine. Reproduce with <code>npm run bench</code>.",
+  "summary": {
+    "glassy": {
+      "move": {
+        "init": 99.40000000037253,
+        "fps": 60.002681684097624,
+        "p95": 16.800000000000182,
+        "slow": 0,
+        "longTasks": 0
+      },
+      "resize": {
+        "init": 84.70000000018626,
+        "fps": 60.00268168409761,
+        "p95": 16.700000000000273,
+        "slow": 0,
+        "longTasks": 0
+      },
+      "scroll": {
+        "init": 84.70000000018626,
+        "fps": 60.002681684097624,
+        "p95": 16.799999999999727,
+        "slow": 0,
+        "longTasks": 0
+      }
+    },
+    "glasshq": {
+      "move": {
+        "init": 354.6999999997206,
+        "fps": 16.907571940061,
+        "p95": 66.70000000000027,
+        "slow": 0.9803921568627451,
+        "longTasks": 1830
+      },
+      "resize": {
+        "init": 474.70000000018626,
+        "fps": 10.277151571409629,
+        "p95": 133.20000000000027,
+        "slow": 0.967741935483871,
+        "longTasks": 2741
+      },
+      "scroll": {
+        "init": 349.3000000002794,
+        "fps": 14.667644509633975,
+        "p95": 83.40000000000009,
+        "slow": 0.9782608695652174,
+        "longTasks": 2411
+      }
+    }
+  },
+  "sizes": {
+    "glassy": 35.336,
+    "glasshqDom": 99.766,
+    "glasshqReact": 189.169
+  }
+}

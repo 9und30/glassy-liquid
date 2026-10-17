@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Getting started. glassy-liquid</title>
+<meta name="description" content="Install glassy-liquid and render your first glass surface with Web Components, React, Vue, Svelte, or a single CDN module." />
+<!--include:head-->
+</head>
+<body data-page="getting-started">
+<!--include:nav-->
+<main id="main" class="doc">
+  <div class="wrap doc__grid">
+    <nav class="doc__toc" aria-label="On this page">
+      <a href="#install">Install</a>
+      <a href="#hello">First surface</a>
+      <a href="#ssr">Next.js / SSR</a>
+      <a href="#scenes">Scenes</a>
+      <a href="#api">glass()</a>
+      <a href="#own">Your own element</a>
+      <a href="#examples">Examples</a>
+    </nav>
+    <div class="doc__body">
+      <header class="doc__head" data-ground="light">
+        <p class="kicker">Guide</p>
+        <h1>Start with one import.</h1>
+        <p class="lede">The custom elements work in plain HTML. React, Vue, and Svelte wrap those same elements, with the same names and the same events.</p>
+      </header>
+
+      <section id="install">
+        <h2>Install</h2>
+        <div class="install">
+          <code id="install-cmd">npm install <span class="install__pkg">glassy-liquid</span></code>
+          <button class="copy" type="button" data-copy="#install-cmd"><span data-icon="copy"></span><span data-copy-label>Copy</span></button>
+        </div>
+        <p>React, Vue, and Svelte are optional peer dependencies. Install the one you already use. Nothing else is required: no WebGPU, no runtime dependencies.</p>
+      </section>
+
+      <section id="hello">
+        <h2>First surface</h2>
+        <p>Each snippet is the same screen: a button and a switch on a photograph. <code>src</code> accepts any image URL. The one below is a public photograph, so the example works when you paste it. If that image fails, <code>glass-scene</code> hides the broken icon and keeps <code>linear-gradient(160deg, #9bb7c9, #e7eef2)</code>.</p>
+        <div data-code-tabs>
+          <div class="guide__tabs" role="tablist" aria-label="Framework">
+            <button class="pill-tab" role="tab" type="button" aria-selected="true" data-tab="html">Web Components</button>
+            <button class="pill-tab" role="tab" type="button" aria-selected="false" data-tab="react">React</button>
+            <button class="pill-tab" role="tab" type="button" aria-selected="false" data-tab="vue">Vue</button>
+            <button class="pill-tab" role="tab" type="button" aria-selected="false" data-tab="svelte">Svelte</button>
+            <button class="pill-tab" role="tab" type="button" aria-selected="false" data-tab="cdn">CDN</button>
+          </div>
+          <div data-panel="html">
+            <div class="code"><div class="code__bar"><span class="code__tab">index.html</span><button class="copy" type="button"><span data-icon="copy"></span><span data-copy-label>Copy</span></button></div>
+<pre data-lang="html">&lt;script type="module"&gt;
+  import "glassy-liquid/elements";
+&lt;/script&gt;
+
+&lt;glass-scene src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/Iceberg_reflection_in_J%C3%B6kuls%C3%A1rl%C3%B3n_%28Unsplash%29.jpg/960px-Iceberg_reflection_in_J%C3%B6kuls%C3%A1rl%C3%B3n_%28Unsplash%29.jpg" style="height: 100vh; background: linear-gradient(160deg, #9bb7c9, #e7eef2)"&gt;
+  &lt;glass-button variant="prominent"&gt;Continue&lt;/glass-button&gt;
+  &lt;glass-switch checked aria-label="Wi-Fi"&gt;&lt;/glass-switch&gt;
+&lt;/glass-scene&gt;</pre></div>
+            <p class="note">The bare <code>glassy-liquid/elements</code> import needs a bundler such as Vite, or an import map. Without a build step, use the CDN tab.</p>
+          </div>
+          <div data-panel="react" hidden>
+            <div class="code"><div class="code__bar"><span class="code__tab">Welcome.tsx</span><button class="copy" type="button"><span data-icon="copy"></span><span data-copy-label>Copy</span></button></div>
+<pre data-lang="jsx">"use client";
+
+import { useState } from "react";
+import { GlassScene, GlassButton, GlassSwitch } from "glassy-liquid/react";
+
+export function Welcome() {
+  const [on, setOn] = useState(true);
+  return (
+    &lt;GlassScene src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/Iceberg_reflection_in_J%C3%B6kuls%C3%A1rl%C3%B3n_%28Unsplash%29.jpg/960px-Iceberg_reflection_in_J%C3%B6kuls%C3%A1rl%C3%B3n_%28Unsplash%29.jpg" style={{ height: "100vh", background: "linear-gradient(160deg, #9bb7c9, #e7eef2)" }}&gt;
+      &lt;GlassButton variant="prominent"&gt;Continue&lt;/GlassButton&gt;
+      &lt;GlassSwitch checked={on} onCheckedChange={setOn} aria-label="Wi-Fi" /&gt;
+    &lt;/GlassScene&gt;
+  );
+}</pre></div>
+          </div>
+          <div data-panel="vue" hidden>
+            <div class="code"><div class="code__bar"><span class="code__tab">App.vue</span><button class="copy" type="button"><span data-icon="copy"></span><span data-copy-label>Copy</span></button></div>
+<pre data-lang="vue">&lt;script setup lang="ts"&gt;
+import { ref } from "vue";
+import { GlassScene, GlassButton, GlassSwitch } from "glassy-liquid/vue";
+
+const on = ref(true);
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;GlassScene src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/Iceberg_reflection_in_J%C3%B6kuls%C3%A1rl%C3%B3n_%28Unsplash%29.jpg/960px-Iceberg_reflection_in_J%C3%B6kuls%C3%A1rl%C3%B3n_%28Unsplash%29.jpg" style="height: 100vh; background: linear-gradient(160deg, #9bb7c9, #e7eef2)"&gt;
+    &lt;GlassButton variant="prominent"&gt;Continue&lt;/GlassButton&gt;
+    &lt;GlassSwitch v-model:checked="on" aria-label="Wi-Fi" /&gt;
+  &lt;/GlassScene&gt;
+&lt;/template&gt;</pre></div>
+            <p class="note">If you also write raw <code>&lt;glass-*&gt;</code> tags in a Vue template, mark them as custom elements: <code>isCustomElement: (tag) =&gt; tag.startsWith("glass-")</code>. The wrapper components do not need that. Named slots are <code>&lt;template #trigger&gt;</code>, <code>#icon</code>, <code>#trailing</code>, and <code>#shortcut</code>, not the HTML <code>slot</code> attribute. The menu sample on the Components page shows <code>#trigger</code>.</p>
+          </div>
+          <div data-panel="svelte" hidden>
+            <div class="code"><div class="code__bar"><span class="code__tab">App.svelte</span><button class="copy" type="button"><span data-icon="copy"></span><span data-copy-label>Copy</span></button></div>
+<pre data-lang="svelte">&lt;script&gt;
+  import { GlassScene, GlassButton, GlassSwitch } from "glassy-liquid/svelte";
+  let on = true;
+&lt;/script&gt;
+
+&lt;GlassScene src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/Iceberg_reflection_in_J%C3%B6kuls%C3%A1rl%C3%B3n_%28Unsplash%29.jpg/960px-Iceberg_reflection_in_J%C3%B6kuls%C3%A1rl%C3%B3n_%28Unsplash%29.jpg" style="height: 100vh; background: linear-gradient(160deg, #9bb7c9, #e7eef2)"&gt;
+  &lt;GlassButton variant="prominent"&gt;Continue&lt;/GlassButton&gt;
+  &lt;GlassSwitch bind:checked={on} aria-label="Wi-Fi" /&gt;
+&lt;/GlassScene&gt;</pre></div>
+            <p class="note">This hello world compiles in Svelte 4 and Svelte 5. <code>bind:checked</code>, <code>bind:value</code>, and <code>bind:open</code> track the controlled props. The component samples on the Components page use Svelte 5 runes (<code>$state</code>, <code>onclick</code>). In Svelte 4, write <code>let</code> and <code>on:click</code> instead. <a href="https://github.com/9und30/glassy-liquid/blob/main/examples/svelte/src/Svelte4.svelte"><code>examples/svelte/src/Svelte4.svelte</code></a> shows the action API, which works in both.</p>
+          </div>
+          <div data-panel="cdn" hidden>
+            <div class="code"><div class="code__bar"><span class="code__tab">index.html</span><button class="copy" type="button"><span data-icon="copy"></span><span data-copy-label>Copy</span></button></div>
+<pre data-lang="html">&lt;script type="module" src="https://cdn.jsdelivr.net/npm/glassy-liquid@0.1/dist/glassy-liquid.min.js"&gt;&lt;/script&gt;
+
+&lt;glass-scene src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/Iceberg_reflection_in_J%C3%B6kuls%C3%A1rl%C3%B3n_%28Unsplash%29.jpg/960px-Iceberg_reflection_in_J%C3%B6kuls%C3%A1rl%C3%B3n_%28Unsplash%29.jpg" style="height: 100vh; background: linear-gradient(160deg, #9bb7c9, #e7eef2)"&gt;
+  &lt;glass-button variant="prominent"&gt;Continue&lt;/glass-button&gt;
+  &lt;glass-switch checked aria-label="Wi-Fi"&gt;&lt;/glass-switch&gt;
+&lt;/glass-scene&gt;</pre></div>
+            <p class="note">One ES module registers every element. A runnable copy lives in <a href="https://github.com/9und30/glassy-liquid/tree/main/examples/vanilla-cdn">examples/vanilla-cdn</a>.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="ssr">
+        <h2>Next.js and server rendering</h2>
+        <p>The React entry (<code>glassy-liquid/react</code>) is a Client Component: the file starts with <code>"use client"</code>. In the Next.js App Router, import <code>GlassScene</code>, <code>GlassButton</code>, and <code>GlassSwitch</code> from a Client Component. The hello world above already has that directive.</p>
+        <p>The React, Vue, and Svelte bindings render <code>defer-hydration</code> on each element and remove it after hydration. While the attribute is present the element stays inert, so server markup matches the hydrated tree.</p>
+        <p>Every entry point is safe to import on the server. Custom elements register only in the browser, where <code>customElements</code> exists, so importing <code>glassy-liquid</code>, <code>glassy-liquid/elements</code>, or a component module from code the server evaluates does not throw. <code>glass()</code>, <code>useGlass()</code>, and <code>attachPress()</code> touch the DOM, so call them in an effect or in <code>onMount</code>, as the playground snippets do.</p>
+      </section>
+
+      <section id="scenes">
+        <h2>Scenes</h2>
+        <p>Safari drops SVG filters inside <code>backdrop-filter</code>, so it cannot bend arbitrary page content. A scene tells the glass what is behind it: an image, a video, a canvas, or a DOM layer. Chromium keeps the faster backdrop path unless the scene sets <code>force</code>.</p>
+        <div class="code"><div class="code__bar"><span class="code__tab">scene.html</span><button class="copy" type="button"><span data-icon="copy"></span><span data-copy-label>Copy</span></button></div>
+<pre data-lang="html">&lt;!-- Photograph or video: WebGL, GPU only. src is any image URL. --&gt;
+&lt;glass-scene src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/Iceberg_reflection_in_J%C3%B6kuls%C3%A1rl%C3%B3n_%28Unsplash%29.jpg/960px-Iceberg_reflection_in_J%C3%B6kuls%C3%A1rl%C3%B3n_%28Unsplash%29.jpg" style="background: linear-gradient(160deg, #9bb7c9, #e7eef2)"&gt;…glass…&lt;/glass-scene&gt;
+
+&lt;!-- Live DOM: one scoped content filter --&gt;
+&lt;glass-scene&gt;
+  &lt;article glass-backdrop&gt;…your content…&lt;/article&gt;
+  &lt;glass-surface radius="capsule"&gt;&lt;/glass-surface&gt;
+&lt;/glass-scene&gt;</pre></div>
+      </section>
+
+      <section id="api">
+        <h2>glass()</h2>
+        <p><code>glass(element, options)</code> turns your own markup into Liquid Glass and returns a controller. The lens on the home page is built this way. The <a href="./playground.html">playground</a> prints a ready-to-paste call.</p>
+        <div class="code"><div class="code__bar"><span class="code__tab">lens.js</span><button class="copy" type="button"><span data-icon="copy"></span><span data-copy-label>Copy</span></button></div>
+<pre data-lang="js">import { glass, attachPress } from "glassy-liquid";
+
+const lens = document.querySelector(".lens");
+const surface = glass(lens, {
+  radius: "circle",
+  material: "clear",
+  zoom: 1.18,
+  refraction: 30,
+});
+attachPress(lens, surface);
+
+surface.set({ tint: "#0a84ff" });
+surface.engine;   // "backdrop" | "scene-gl" | "scene-dom" | "css"
+surface.destroy();</pre></div>
+        <div class="table-scroll" tabindex="0" aria-label="glass() options">
+          <table class="props" id="glass-props">
+            <thead><tr><th>Option</th><th>Type</th><th>Default</th><th>What it does</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <p>React, Vue, and Svelte expose the same options through <code>useGlass</code>. On a custom element, the same names are attributes, except <code>zoom</code>, <code>backdrop</code>, and <code>fill</code>, which exist only on <code>glass()</code>. In HTML the angle is <code>light-angle</code>. <code>interactive</code> is not a glass option. It is a component flag that turns on the press response (<code>attachPress</code>).</p>
+      </section>
+
+      <section id="own">
+        <h2>Your own element</h2>
+        <p>Extend <code>GlassElement</code> when you want the layer stack, attribute handling, and the press response. This player is defined on this page.</p>
+        <glass-scene class="custom__stage" data-src="img/city.webp" data-ground="photo">
+          <now-playing title="Caustic Hour" artist="Ostra Vale"></now-playing>
+        </glass-scene>
+        <div class="code"><div class="code__bar"><span class="code__tab">now-playing.js</span><button class="copy" type="button"><span data-icon="copy"></span><span data-copy-label>Copy</span></button></div>
+<pre data-lang="js" id="custom-code"></pre></div>
+      </section>
+
+      <section id="examples">
+        <h2>Runnable examples</h2>
+        <p>Each folder under <code>examples/</code> is a minimal Vite project that depends on this package. From the repository root, <code>npm run examples:build</code> builds all four.</p>
+        <ul>
+          <li><a href="https://github.com/9und30/glassy-liquid/tree/main/examples/vanilla-cdn">examples/vanilla-cdn</a> loads the CDN bundle.</li>
+          <li><a href="https://github.com/9und30/glassy-liquid/tree/main/examples/react">examples/react</a> uses the React bindings.</li>
+          <li><a href="https://github.com/9und30/glassy-liquid/tree/main/examples/vue">examples/vue</a> uses the Vue 3 bindings.</li>
+          <li><a href="https://github.com/9und30/glassy-liquid/tree/main/examples/svelte">examples/svelte</a> uses the Svelte bindings. <code>Svelte4.svelte</code> shows the action API.</li>
+        </ul>
+      </section>
+    </div>
+  </div>
+</main>
+<!--include:foot-->
+<script type="module" src="./src/boot.ts"></script>
+</body>
+</html>

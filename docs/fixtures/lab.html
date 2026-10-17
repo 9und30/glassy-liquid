@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>glassy-liquid lab</title>
+<style>
+  html,body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Inter",system-ui,sans-serif;}
+  body{min-height:100vh;}
+  .bg{position:relative;width:900px;height:620px;overflow:hidden;
+    background:
+      repeating-linear-gradient(90deg, rgba(0,0,0,.85) 0 2px, transparent 2px 28px),
+      repeating-linear-gradient(0deg, rgba(0,0,0,.85) 0 2px, transparent 2px 28px),
+      linear-gradient(135deg,#ff6b6b,#ffd93d 30%,#6bcB77 55%,#4d96ff 80%,#b15eff);}
+  .bg p{position:absolute;margin:0;font-size:34px;font-weight:800;color:#111;letter-spacing:-.02em}
+  .g{position:absolute;color:var(--gl-fg);display:flex;align-items:center;justify-content:center;font-weight:600;font-size:17px}
+</style>
+</head>
+<body>
+<div class="bg" id="bg">
+  <p style="left:40px;top:60px">Liquid Glass refracts light</p>
+  <p style="left:120px;top:300px">The quick brown fox jumps</p>
+  <p style="left:60px;top:470px">over the lazy dog · 0123456789</p>
+  <div class="g" id="a" style="left:60px;top:40px;width:300px;height:120px">Regular</div>
+  <div class="g" id="b" style="left:420px;top:40px;width:180px;height:56px">Capsule</div>
+  <div class="g" id="c" style="left:660px;top:30px;width:110px;height:110px">●</div>
+  <div class="g" id="d" style="left:100px;top:260px;width:420px;height:150px">Clear</div>
+  <div class="g" id="e" style="left:580px;top:260px;width:260px;height:300px">Panel</div>
+  <div class="g" id="f" style="left:60px;top:450px;width:64px;height:64px">+</div>
+  <div class="g" id="h" style="left:160px;top:450px;width:340px;height:64px">Tinted</div>
+</div>
+<script type="module">
+  import { glass } from "glassy-liquid";
+  const q = new URLSearchParams(location.search);
+  const engine = q.get("engine") || "auto";
+  const appearance = q.get("appearance") || "light";
+  const base = { engine, appearance };
+  window.surfaces = {
+    a: glass(document.getElementById("a"), { ...base, radius: 32 }),
+    b: glass(document.getElementById("b"), { ...base, radius: "capsule" }),
+    c: glass(document.getElementById("c"), { ...base, radius: "circle", material: "clear" }),
+    d: glass(document.getElementById("d"), { ...base, radius: 40, material: "clear" }),
+    e: glass(document.getElementById("e"), { ...base, radius: 28 }),
+    f: glass(document.getElementById("f"), { ...base, radius: "circle" }),
+    h: glass(document.getElementById("h"), { ...base, radius: "capsule", tint: "#0a84ff" }),
+  };
+  window.ready = true;
+</script>
+</body>
+</html>

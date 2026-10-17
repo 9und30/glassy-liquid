@@ -1,0 +1,18 @@
+{
+  "name": "glassy-liquid-example-vue",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --port 5203 --host 127.0.0.1",
+    "build": "vite build",
+    "preview": "vite preview --port 5203 --host 127.0.0.1"
+  },
+  "dependencies": {
+    "glassy-liquid": "file:../..",
+    "vue": "^3.5.43"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.2.4",
+    "vite": "^6.4.4"
+  }
+}

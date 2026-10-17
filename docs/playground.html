@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Playground. glassy-liquid</title>
+<meta name="description" content="Tune blur, refraction, tint, radius, and the rest of the glass options. Copy the generated code for Web Components, React, Vue, or Svelte." />
+<!--include:head-->
+</head>
+<body data-page="playground">
+<!--include:nav-->
+<main id="main" class="studio">
+  <glass-scene class="studio__stage" id="play-stage" data-ground="photo" src="img/glacier.webp">
+    <div id="play-glass" class="slab">
+      <b>Field glass</b>
+      <span>Press, then drag a little.</span>
+    </div>
+  </glass-scene>
+  <div class="studio__panel" data-ground="light">
+    <header>
+      <p class="kicker">Studio</p>
+      <h1>Tune a slab.</h1>
+      <p class="lede">These are the real <code>glass()</code> options. The snippet follows every control.</p>
+      <p class="engine-line" id="play-engine">Rendering</p>
+    </header>
+    <div class="knobs" id="knobs" aria-label="Glass options"></div>
+    <div class="code" data-code-tabs id="play-code">
+      <div class="code__bar">
+        <div class="code__tabs" role="tablist" aria-label="Generated code">
+          <button class="code__tab" role="tab" type="button" aria-selected="true" data-tab="html">Web Components</button>
+          <button class="code__tab" role="tab" type="button" aria-selected="false" data-tab="react">React</button>
+          <button class="code__tab" role="tab" type="button" aria-selected="false" data-tab="vue">Vue</button>
+          <button class="code__tab" role="tab" type="button" aria-selected="false" data-tab="svelte">Svelte</button>
+        </div>
+        <button class="copy" type="button"><span data-icon="copy"></span><span data-copy-label>Copy</span></button>
+      </div>
+      <pre data-panel="html" data-lang="js" data-live></pre>
+      <pre data-panel="react" data-lang="jsx" data-live hidden></pre>
+      <pre data-panel="vue" data-lang="vue" data-live hidden></pre>
+      <pre data-panel="svelte" data-lang="svelte" data-live hidden></pre>
+    </div>
+  </div>
+</main>
+<!--include:foot-->
+<script type="module" src="./src/boot.ts"></script>
+</body>
+</html>

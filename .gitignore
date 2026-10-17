@@ -1,0 +1,17 @@
+node_modules/
+dist/
+docs-dist/
+test-results/
+playwright-report/
+*.log
+.DS_Store
+.vite/
+bench/competitor/node_modules/
+bench/shot-*.png
+bench/competitor/*.bundle.js
+examples/*/node_modules/
+examples/*/dist/
+docs-dist-pages/
+.env
+.env.*
+*.tgz

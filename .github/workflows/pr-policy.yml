@@ -1,0 +1,54 @@
+name: Pull request policy
+
+# Pull requests are not accepted for now (see CONTRIBUTING.md). This closes pull
+# requests from outside the project with a pointer to the issue tracker.
+#
+# pull_request_target runs in the context of the base repository, so this job
+# must never check out, build, or run anything from the pull request. It only
+# calls the GitHub API through gh, with a token limited to pull requests.
+# The owner, members, collaborators, and the listed bots are skipped,
+# so Dependabot pull requests and the maintainer's own branches keep working.
+# A pull request the owner reopens by hand stays open.
+
+on:
+  pull_request_target:
+    types:
+      - opened
+      - reopened
+
+permissions: {}
+
+concurrency:
+  group: pr-policy-${{ github.event.pull_request.number }}
+  cancel-in-progress: false
+
+jobs:
+  close:
+    name: Close outside pull requests
+    if: >-
+      github.event.pull_request.user.login != '9und30' &&
+      !contains(fromJSON('["OWNER", "MEMBER", "COLLABORATOR"]'), github.event.pull_request.author_association) &&
+      !contains(fromJSON('["dependabot[bot]", "github-actions[bot]"]'), github.event.pull_request.user.login) &&
+      !(github.event.action == 'reopened' && github.event.sender.login == '9und30')
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    timeout-minutes: 5
+    steps:
+      - name: Comment and close
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          NUMBER: ${{ github.event.pull_request.number }}
+          ISSUES_URL: ${{ github.server_url }}/${{ github.repository }}/issues/new/choose
+          POLICY_URL: ${{ github.server_url }}/${{ github.repository }}/blob/main/CONTRIBUTING.md
+        run: |
+          set -euo pipefail
+          body="Thanks for taking the time to open this pull request.
+
+          glassy-liquid does not accept pull requests at the moment, so this one was closed automatically. This is not a judgment of the change. The reason is in the contributing guide: ${POLICY_URL}
+
+          Bug reports and feature requests are very welcome. Please open an issue that describes the problem or the idea: ${ISSUES_URL}
+
+          If this pull request already contains a fix, mention it in the issue. The idea can still land that way."
+          gh pr close "$NUMBER" --repo "$REPO" --comment "$body"

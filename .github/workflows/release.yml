@@ -1,0 +1,52 @@
+name: Release
+
+# Manual draft only. This workflow never publishes to npm and never creates a GitHub Release.
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Version label for this draft (not published)
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  draft:
+    name: Draft pack
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Setup Node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Prepublish checks
+        run: npm run prepublishOnly
+
+      - name: Format
+        run: npm run format:check
+
+      - name: Pack contents
+        run: npm run pack:check
+
+      - name: Size budget
+        run: npm run size
+
+      - name: Draft only
+        env:
+          VERSION: ${{ github.event.inputs.version }}
+        run: |
+          if ! printf '%s\n' "$VERSION" | grep -Eq '^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(-[0-9A-Za-z.-]+)?(\+[0-9A-Za-z.-]+)?$'; then
+            echo "version must be semver, got: $VERSION"
+            exit 1
+          fi
+          echo "Draft $VERSION checked: prepublish checks, format, pack contents, and size passed. No npm publish and no GitHub Release."

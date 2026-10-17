@@ -1,0 +1,112 @@
+/* Optical catalog. Limestone paper, walnut ink, one copper signal.
+   Fraunces for display (optical size axis), Outfit for UI, IBM Plex Mono for code. */
+@font-face {
+  font-family: "Fraunces";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("./fonts/fraunces-roman.woff2") format("woff2");
+  font-optical-sizing: auto;
+}
+@font-face {
+  font-family: "Fraunces";
+  font-style: italic;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("./fonts/fraunces-italic.woff2") format("woff2");
+  font-optical-sizing: auto;
+}
+@font-face {
+  font-family: "Outfit";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("./fonts/outfit.woff2") format("woff2");
+}
+@font-face {
+  font-family: "IBM Plex Mono";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("./fonts/ibm-plex-mono-normal-400.woff2") format("woff2");
+}
+@font-face {
+  font-family: "IBM Plex Mono";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("./fonts/ibm-plex-mono-normal-500.woff2") format("woff2");
+}
+
+:root {
+  --color-paper: oklch(95.6% 0.016 88);
+  --color-paper-2: oklch(93% 0.02 86);
+  --color-paper-3: oklch(89.2% 0.024 82);
+  --color-rule: oklch(83% 0.02 78);
+  --color-faint: oklch(55% 0.022 68);
+  --color-muted: oklch(44% 0.028 58);
+  --color-ink-2: oklch(34% 0.03 52);
+  --color-ink: oklch(23% 0.028 50);
+  --color-accent: oklch(48% 0.13 42);
+  --color-accent-deep: oklch(40% 0.12 40);
+  --color-accent-ink: oklch(97% 0.012 88);
+  --color-link: oklch(42% 0.12 40);
+  --color-focus: oklch(48% 0.13 42);
+
+  --color-night: oklch(21% 0.022 52);
+  --color-night-2: oklch(27% 0.022 55);
+  --color-night-rule: oklch(34% 0.02 55);
+  --color-on-night: oklch(95.5% 0.014 88);
+  --color-on-night-2: oklch(78% 0.02 80);
+  --color-on-night-muted: oklch(68% 0.02 75);
+
+  --color-on-photo: oklch(97.5% 0.01 90);
+  --color-chip: oklch(22% 0.03 50);
+  --color-ok: oklch(46% 0.11 155);
+
+  --color-tok-tag: oklch(78% 0.08 70);
+  --color-tok-attr: oklch(84% 0.04 90);
+  --color-tok-string: oklch(82% 0.08 145);
+  --color-tok-key: oklch(80% 0.07 40);
+  --color-tok-comment: oklch(64% 0.02 70);
+  --color-tok-punct: oklch(72% 0.015 80);
+
+  --font-display: "Fraunces", "Iowan Old Style", Palatino, Georgia, serif;
+  --font-body: "Outfit", "Avenir Next", "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1.0625rem;
+  --text-lg: 1.3125rem;
+  --text-xl: clamp(1.5rem, 0.6vw + 1.25rem, 1.875rem);
+  --text-2xl: clamp(2rem, 1.6vw + 1.35rem, 2.75rem);
+  --text-3xl: clamp(2.5rem, 3vw + 1.2rem, 4rem);
+  --text-display: clamp(3.35rem, 6.4vw + 0.8rem, 7.25rem);
+
+  --space-2xs: 0.25rem;
+  --space-xs: 0.5rem;
+  --space-sm: 0.75rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2.5rem;
+  --space-2xl: 4.5rem;
+  --space-3xl: 7rem;
+  /* Between two bands of a page: room above an eyebrow, below a rule. */
+  --space-section: clamp(3.5rem, 2.5rem + 3vw, 4.5rem);
+
+  --radius-sm: 12px;
+  --radius-md: 18px;
+  --radius-lg: 28px;
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --wrap: 1120px;
+  --gutter: max(1.25rem, env(safe-area-inset-left, 0px));
+  --gutter-end: max(1.25rem, env(safe-area-inset-right, 0px));
+  --nav-clear: calc(4.75rem + env(safe-area-inset-top, 0px));
+
+  --glass-accent: #0a84ff;
+  --glass-font: var(--font-body);
+  --glass-appearance: light;
+
+  color-scheme: light;
+}

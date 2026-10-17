@@ -1,0 +1,90 @@
+name: Bug report
+description: A component, binding, or renderer does not work as documented
+title: "bug: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the report. Security issues belong in a [private advisory](https://github.com/9und30/glassy-liquid/security/advisories/new), not here.
+
+        A minimal reproduction is the fastest way to a fix. See [how to file a good report](https://github.com/9und30/glassy-liquid/blob/main/CONTRIBUTING.md#filing-a-good-bug-report).
+  - type: checkboxes
+    id: searched
+    attributes:
+      label: Before you file
+      options:
+        - label: I searched the existing issues and this is not a duplicate.
+          required: true
+        - label: I can reproduce this with the latest released version, or with the current `main`.
+          required: false
+  - type: textarea
+    id: summary
+    attributes:
+      label: What happened
+      description: What you saw, in one or two sentences.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected
+      description: What should have happened instead.
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: The `glassy-liquid` version from your lockfile, or the commit you built.
+      placeholder: "0.1.0"
+    validations:
+      required: true
+  - type: dropdown
+    id: entry
+    attributes:
+      label: Entry point
+      description: How you load glassy-liquid. Pick every one that shows the bug.
+      multiple: true
+      options:
+        - Web Components (glassy-liquid/elements)
+        - CDN bundle (glassy-liquid.min.js)
+        - React
+        - Vue
+        - Svelte
+        - glass() or useGlass()
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Browser and version, operating system, and the framework version if you use one. Add the server framework (Next.js, Nuxt, SvelteKit) for SSR or hydration bugs.
+      placeholder: "Safari 18, iOS 18, Vue 3.5"
+    validations:
+      required: true
+  - type: input
+    id: reproduction
+    attributes:
+      label: Reproduction link
+      description: A StackBlitz, CodePen, or small repository that shows the bug. Optional when the snippet below is enough.
+      placeholder: "https://stackblitz.com/edit/..."
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: The smallest HTML or component that shows the problem, plus the steps. A snippet is more useful than a description.
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Console output
+      description: Errors or warnings from the browser console or the server.
+      render: text
+  - type: textarea
+    id: extra
+    attributes:
+      label: Anything else
+      description: Screenshots or a short clip for visual bugs. Whether `prefers-reduced-motion` or `prefers-reduced-transparency` is on, and whether you set `engine`, `material`, or a `<glass-scene>`.

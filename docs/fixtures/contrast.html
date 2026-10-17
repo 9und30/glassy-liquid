@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>label contrast</title>
+<style>
+  html, body { margin: 0; background: #fff; }
+  glass-scene { display: block; width: 640px; height: 360px; position: relative; }
+  glass-button { position: absolute; left: 70px; top: 148px; }
+  .outside { margin: 24px; }
+</style>
+</head>
+<body>
+<glass-scene id="scene">
+  <canvas id="stripes" glass-backdrop width="640" height="360"></canvas>
+  <glass-button id="in">Click Me</glass-button>
+</glass-scene>
+<div class="outside">
+  <glass-button id="out">Click Me</glass-button>
+</div>
+<script type="module">
+  import "glassy-liquid/elements";
+  const canvas = document.getElementById("stripes");
+  const ctx = canvas.getContext("2d");
+  const colors = ["#e23d28", "#f0a202", "#f6e27a", "#7dce82", "#3d8bfd", "#2f3e46", "#f4f1ea"];
+  const w = canvas.width;
+  const h = canvas.height;
+  for (let x = -h; x < w + h; x += 28) {
+    ctx.beginPath();
+    ctx.moveTo(x, 0);
+    ctx.lineTo(x + h, h);
+    ctx.lineTo(x + h + 28, h);
+    ctx.lineTo(x + 28, 0);
+    ctx.closePath();
+    ctx.fillStyle = colors[(x / 28) & 7];
+    ctx.fill();
+  }
+  ctx.fillStyle = "#000";
+  ctx.font = "900 200px sans-serif";
+  ctx.textAlign = "left";
+  ctx.textBaseline = "middle";
+  ctx.fillText("ACTION", 40, h / 2);
+  document.getElementById("scene").invalidate?.();
+  const q = new URLSearchParams(location.search);
+  const scene = document.getElementById("scene");
+  if (q.get("force")) scene.setAttribute("force", "");
+  if (q.get("dom")) {
+    const url = canvas.toDataURL("image/png");
+    canvas.removeAttribute("glass-backdrop");
+    canvas.remove();
+    const div = document.createElement("div");
+    div.setAttribute("glass-backdrop", "");
+    div.style.cssText = `width:640px;height:360px;background:url(${url}) center/cover no-repeat`;
+    scene.prepend(div);
+    scene.setAttribute("backdrop", "[glass-backdrop]");
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>look test</title>
+<style>
+  html,body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Inter",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  .phone{position:relative;width:390px;height:844px;overflow:hidden;background:#000 url(../img/lake.webp) center/cover;}
+  .phone.city{background-image:url(../img/city.webp)}
+  .phone.fruit{background-image:url(../img/fruit.webp)}
+  .phone.silk{background-image:url(../img/silk.webp)}
+  .g{position:absolute;display:flex;align-items:center;justify-content:center;color:var(--gl-fg);font-size:17px;font-weight:600;letter-spacing:-.01em}
+  .row{display:flex;gap:2px;align-items:center;justify-content:space-around;width:100%;padding:0 6px;box-sizing:border-box}
+  .tab{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:10px;font-weight:600;width:72px}
+  .tab svg{width:26px;height:26px}
+  .sel{color:#0a84ff}
+  .widget{flex-direction:column;align-items:flex-start;justify-content:flex-start;padding:16px;box-sizing:border-box;gap:6px}
+  .widget b{font-size:44px;font-weight:300;letter-spacing:-.03em;line-height:1}
+  .widget span{font-size:13px;opacity:.75}
+</style>
+</head>
+<body>
+<div class="phone" id="phone">
+  <div class="g" id="back" style="left:16px;top:58px;width:44px;height:44px">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+  </div>
+  <div class="g" id="pill" style="left:228px;top:58px;width:146px;height:44px">
+    <div class="row" style="justify-content:space-evenly">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 12h16M12 4v16"/></svg>
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>
+    </div>
+  </div>
+  <div class="g widget" id="widget" style="left:16px;top:300px;width:170px;height:170px">
+    <span>Mountain lake</span><b>14°</b><span>Clear · H 18° L 6°</span>
+  </div>
+  <div class="g" id="clear" style="left:204px;top:300px;width:170px;height:170px;border-radius:40px">Clear</div>
+  <div class="g" id="search" style="left:16px;top:690px;width:298px;height:48px;justify-content:flex-start;padding-left:16px;box-sizing:border-box;font-weight:500;color:rgba(60,60,67,.7)">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>&nbsp;Search
+  </div>
+  <div class="g" id="mic" style="left:326px;top:690px;width:48px;height:48px">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>
+  </div>
+  <div class="g" id="tabs" style="left:16px;top:752px;width:358px;height:62px">
+    <div class="row">
+      <div class="tab sel"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3l9 8h-3v9h-4v-6h-4v6H6v-9H3z"/></svg>Home</div>
+      <div class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="15" rx="3"/><path d="M3 10h18"/></svg>Library</div>
+      <div class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>Recent</div>
+      <div class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/></svg>Profile</div>
+    </div>
+  </div>
+</div>
+<script type="module">
+  import { glass } from "glassy-liquid";
+  const q = new URLSearchParams(location.search);
+  if (q.get("bg")) document.getElementById("phone").classList.add(q.get("bg"));
+  const engine = q.get("engine") || "auto";
+  const appearance = q.get("appearance") || "light";
+  const base = { engine, appearance };
+  const $ = (id) => document.getElementById(id);
+  window.surfaces = {
+    back: glass($("back"), { ...base, radius: "circle" }),
+    pill: glass($("pill"), { ...base, radius: "capsule" }),
+    widget: glass($("widget"), { ...base, radius: 36 }),
+    clear: glass($("clear"), { ...base, radius: 40, material: "clear" }),
+    search: glass($("search"), { ...base, radius: "capsule" }),
+    mic: glass($("mic"), { ...base, radius: "circle" }),
+    tabs: glass($("tabs"), { ...base, radius: "capsule" }),
+  };
+</script>
+</body>
+</html>

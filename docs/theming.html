@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Theming. glassy-liquid</title>
+<meta name="description" content="Theme glassy-liquid with three custom properties: accent, appearance, and font. Style parts with ::part()." />
+<!--include:head-->
+</head>
+<body data-page="theming">
+<!--include:nav-->
+<main id="main" class="doc">
+  <div class="wrap doc__grid">
+    <nav class="doc__toc" aria-label="On this page">
+      <a href="#properties">Properties</a>
+      <a href="#knobs">Component knobs</a>
+      <a href="#lab">Try it</a>
+      <a href="#parts">Parts</a>
+      <a href="#materials">Materials</a>
+      <a href="#sheet">Sheet tint</a>
+    </nav>
+    <div class="doc__body">
+      <header class="doc__head">
+        <p class="kicker">Theme</p>
+        <h1>A few properties, then the parts.</h1>
+        <p class="lede">Accent, appearance, and the typeface first, then a knob per component. The material itself stays physical: frost, rim light, and refraction are options, not a stylesheet.</p>
+      </header>
+
+      <section id="properties">
+        <h2>Properties</h2>
+        <p>Set them on any ancestor. Every glass element inside inherits them.</p>
+        <div class="code"><div class="code__bar"><span class="code__tab">theme.css</span><button class="copy" type="button"><span data-icon="copy"></span><span data-copy-label>Copy</span></button></div>
+<pre data-lang="css">:root {
+  --glass-accent: #0a84ff;          /* prominent buttons, sliders, tabs */
+  --glass-appearance: light;        /* light, dark, or leave it on auto */
+  --glass-font: "Outfit", system-ui;
+}</pre></div>
+        <ul>
+          <li><code>--glass-accent</code> tints prominent buttons and the filled portion of sliders and switches. Text on that fill is shifted so it stays readable.</li>
+          <li><code>--glass-appearance</code> is read when an element is <code>appearance="auto"</code>. After that, the page <code>color-scheme</code> is used. The operating system scheme is not consulted on its own.</li>
+          <li><code>--glass-font</code> is the typeface inside every control. This site sets it to Outfit so the UI does not inherit the display serif.</li>
+          <li><code>--glass-foreground</code> overrides the text color inside glass. It falls back to <code>--gl-fg</code>, which glass sets on the host for its appearance.</li>
+          <li><code>--glass-text-shadow</code> overrides the text shadow. It falls back to <code>--gl-text-shadow</code>.</li>
+          <li><code>--glass-focus</code> is the focus ring color.</li>
+        </ul>
+        <p>For content you color yourself inside glass, use <code>color: var(--gl-fg)</code>. Every glass element also sets <code>data-appearance="light"</code> or <code>data-appearance="dark"</code>. After changing <code>--glass-appearance</code> or <code>color-scheme</code> on an element other than <code>&lt;html&gt;</code> or <code>&lt;body&gt;</code>, call <code>updateAppearance()</code>.</p>
+      </section>
+
+      <section id="knobs">
+        <h2>Component knobs</h2>
+        <p>Each control reads its own custom properties and has a built-in default for every one. Set them on the element or on any ancestor.</p>
+        <ul>
+          <li>Button: <code>--glass-button-height</code>, <code>--glass-button-padding</code>, <code>--glass-button-font-size</code>, <code>--glass-on-accent</code>, <code>--glass-accent-text</code></li>
+          <li>Switch: <code>--glass-switch-on</code>, <code>--glass-switch-off</code>, <code>--glass-thumb</code></li>
+          <li>Slider: <code>--glass-slider-track</code>, <code>--glass-slider-off</code>, <code>--glass-thumb</code></li>
+          <li>Tab bar: <code>--glass-tab-bar-height</code>, <code>--glass-tab-selection</code>, <code>--glass-tab-selected</code></li>
+          <li>Segmented control: <code>--glass-segmented-height</code>, <code>--glass-segmented-track</code>, <code>--glass-segmented-backdrop</code>, <code>--glass-segmented-selected</code>, <code>--glass-segmented-thumb</code></li>
+          <li>Tab bar and segmented items: <code>--glass-selector-padding</code>, <code>--glass-item-direction</code>, <code>--glass-item-gap</code></li>
+          <li>Menu: <code>--glass-menu-highlight</code>, <code>--glass-destructive</code></li>
+          <li>Search: <code>--glass-search-height</code></li>
+          <li>Sheet: <code>--glass-scrim</code>, <code>--glass-sheet-inset</code>, <code>--glass-sheet-max-width</code>, <code>--glass-sheet-padding</code></li>
+          <li>Group and toolbar: <code>--glass-group-padding</code>, <code>--glass-toolbar-gap</code></li>
+        </ul>
+      </section>
+
+      <section id="lab">
+        <h2>Try it</h2>
+        <div class="lab" id="theme-lab">
+          <glass-scene class="lab__stage" id="theme-stage" data-src="img/lake.webp" data-ground="photo" style="--glass-accent:#0a84ff">
+            <div class="lab__row">
+              <glass-button variant="prominent">Continue</glass-button>
+              <glass-button>Later</glass-button>
+              <glass-switch checked aria-label="Notifications"></glass-switch>
+            </div>
+            <div class="lab__row" style="margin-top:1rem">
+              <glass-slider value="48" aria-label="Level" style="width:min(280px,100%)"></glass-slider>
+            </div>
+          </glass-scene>
+          <div class="swatches" role="group" aria-label="Accent color">
+            <button class="swatch" type="button" data-accent="#0a84ff" aria-label="Blue" aria-pressed="true" style="background:#0a84ff"></button>
+            <button class="swatch" type="button" data-accent="#c4622d" aria-label="Copper" aria-pressed="false" style="background:#c4622d"></button>
+            <button class="swatch" type="button" data-accent="#2f6b4f" aria-label="Pine" aria-pressed="false" style="background:#2f6b4f"></button>
+            <button class="swatch" type="button" data-accent="#6b3fa0" aria-label="Violet" aria-pressed="false" style="background:#6b3fa0"></button>
+          </div>
+          <glass-segmented id="theme-appearance" value="light" aria-label="Appearance">
+            <glass-segment value="light">Light</glass-segment>
+            <glass-segment value="dark">Dark</glass-segment>
+          </glass-segmented>
+          <div class="code"><pre data-lang="css" id="theme-accent-code">:root {
+  --glass-accent: #0a84ff;
+}</pre></div>
+        </div>
+      </section>
+
+      <section id="parts">
+        <h2>Parts</h2>
+        <p>Reach into a control with <code>::part()</code>. The shared stack is <code>::part(glass)</code>. Layers inside that stack stay in the engine.</p>
+        <div class="table-scroll" tabindex="0" aria-label="Element parts">
+          <table class="props">
+            <thead><tr><th>Element</th><th>Parts</th></tr></thead>
+            <tbody>
+              <tr><td><code>glass-surface</code></td><td><code>glass</code></td></tr>
+              <tr><td><code>glass-button</code></td><td><code>label</code>, <code>glass</code></td></tr>
+              <tr><td><code>glass-switch</code></td><td><code>track</code>, <code>fill</code>, <code>thumb</code>, <code>glass</code></td></tr>
+              <tr><td><code>glass-slider</code></td><td><code>track</code>, <code>fill</code>, <code>ticks</code>, <code>thumb</code>, <code>glass</code></td></tr>
+              <tr><td><code>glass-tab-bar</code></td><td><code>indicator</code>, <code>lens</code>, <code>glass</code></td></tr>
+              <tr><td><code>glass-segmented</code></td><td><code>track</code>, <code>indicator</code>, <code>lens</code>, <code>glass</code></td></tr>
+              <tr><td><code>glass-tab</code></td><td><code>content</code></td></tr>
+              <tr><td><code>glass-segment</code></td><td><code>content</code></td></tr>
+              <tr><td><code>glass-menu</code></td><td><code>panel</code>, <code>content</code>, <code>glass</code></td></tr>
+              <tr><td><code>glass-menu-item</code></td><td><code>label</code></td></tr>
+              <tr><td><code>glass-group</code></td><td><code>glass</code></td></tr>
+              <tr><td><code>glass-search</code></td><td><code>icon</code>, <code>input</code>, <code>clear</code>, <code>glass</code></td></tr>
+              <tr><td><code>glass-sheet</code></td><td><code>scrim</code>, <code>sheet</code>, <code>grabber</code>, <code>body</code>, <code>glass</code></td></tr>
+              <tr><td><code>glass-scene</code></td><td><code>backdrop</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="code"><div class="code__bar"><span class="code__tab">parts.css</span><button class="copy" type="button"><span data-icon="copy"></span><span data-copy-label>Copy</span></button></div>
+<pre data-lang="css">glass-scene::part(backdrop) { object-position: 50% 20%; }
+glass-search::part(input) { font-size: 17px; }</pre></div>
+      </section>
+
+      <section id="materials">
+        <h2>Materials</h2>
+        <p><code>regular</code> is milky and legible over anything. <code>clear</code> is for photographs and video, where you want the picture to stay present. Both exist in light and dark. Per-surface options such as <code>refraction</code>, <code>blur</code>, <code>tint</code>, and <code>specular</code> are easier to feel than to describe: that is what the <a href="./playground.html">playground</a> is for.</p>
+      </section>
+
+      <section id="sheet">
+        <h2>Sheet tint</h2>
+        <p><code>glass-sheet</code> applies <code>material</code>, <code>blur</code>, and <code>tint</code> to the card. Set them as attributes, or as the same props in React, Vue, and Svelte. Changing them updates an open sheet.</p>
+        <div class="code"><div class="code__bar"><span class="code__tab">sheet.html</span><button class="copy" type="button"><span data-icon="copy"></span><span data-copy-label>Copy</span></button></div>
+<pre data-lang="html">&lt;glass-sheet tint="#c4622d" blur="14" material="clear" detents="medium large" aria-label="Details"&gt;
+  Copper glass, a little more frost.
+&lt;/glass-sheet&gt;</pre></div>
+        <div class="code"><div class="code__bar"><span class="code__tab">sheet.css</span><button class="copy" type="button"><span data-icon="copy"></span><span data-copy-label>Copy</span></button></div>
+<pre data-lang="css">glass-sheet::part(glass) {
+  border-radius: 28px;
+}</pre></div>
+        <p>The shared stack is <code>glass-sheet::part(glass)</code>. <code>tint</code>, <code>blur</code>, and <code>material</code> already drive that part. Use the selector when you want an extra outline or radius on top.</p>
+      </section>
+    </div>
+  </div>
+</main>
+<!--include:foot-->
+<script type="module" src="./src/boot.ts"></script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security vulnerability
+    url: https://github.com/9und30/glassy-liquid/security/advisories/new
+    about: Report a vulnerability in private. Please do not open a public issue.
+  - name: Documentation
+    url: https://9und30.github.io/glassy-liquid/
+    about: Usage, every component, theming, browser support, and the playground.
+  - name: Contributing policy
+    url: https://github.com/9und30/glassy-liquid/blob/main/CONTRIBUTING.md
+    about: Issues are welcome. Pull requests are not accepted for now.

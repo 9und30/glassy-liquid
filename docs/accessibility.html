@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Accessibility. glassy-liquid</title>
+<meta name="description" content="Keyboard support, roles, reduced motion, reduced transparency, and forced colors in glassy-liquid." />
+<!--include:head-->
+</head>
+<body data-page="accessibility">
+<!--include:nav-->
+<main id="main" class="doc">
+  <div class="wrap doc__grid">
+    <nav class="doc__toc" aria-label="On this page">
+      <a href="#roles">Roles</a>
+      <a href="#keys">Keyboard</a>
+      <a href="#preferences">Preferences</a>
+      <a href="#try">Try the keys</a>
+    </nav>
+    <div class="doc__body">
+      <header class="doc__head">
+        <p class="kicker">Access</p>
+        <h1>Built to be operated.</h1>
+        <p class="lede">The glass is a material. The controls underneath use real roles, real keyboard behavior, and the motion and contrast preferences the platform already has.</p>
+      </header>
+
+      <section id="roles">
+        <h2>Roles</h2>
+        <p>Each control sets its own role when it connects. You do not add <code>role="button"</code> yourself. Do give it an accessible name when the visible label is not enough: icon buttons need <code>aria-label</code>, and so do sliders and switches that sit beside a separate caption.</p>
+        <ul>
+          <li>Button, switch, slider, tab bar, segmented control, menu, menu item, search, and dialog (the sheet) expose platform roles.</li>
+          <li>Switches, sliders, and the search field are form-associated. They submit with <code>name</code> and <code>value</code>.</li>
+          <li>Focus is visible. The ring uses <code>--glass-accent</code>, drawn outside the slab so the rim light does not hide it.</li>
+          <li>Opening a menu or a sheet moves focus inside. Escape closes it and returns focus to the trigger. A <code>modal</code> sheet also keeps Tab and Shift+Tab inside and is announced with <code>aria-modal</code>.</li>
+        </ul>
+      </section>
+
+      <section id="keys">
+        <h2>Keyboard</h2>
+        <div class="table-scroll" tabindex="0" aria-label="Keyboard controls">
+          <table class="props">
+            <thead><tr><th>Control</th><th>Keys</th></tr></thead>
+            <tbody>
+              <tr><td>Button</td><td>Enter and Space activate.</td></tr>
+              <tr><td>Switch</td><td>Space toggles. Enter toggles when it is focused.</td></tr>
+              <tr><td>Slider</td><td>Arrow keys step. Page Up and Page Down take larger steps. Home and End jump to the ends.</td></tr>
+              <tr><td>Tab bar, segmented</td><td>Arrow keys move the selection. Home and End jump to the ends.</td></tr>
+              <tr><td>Menu</td><td>Enter, Space, or Arrow Down opens. Arrows move. Type-ahead jumps. Enter selects. Escape closes.</td></tr>
+              <tr><td>Toolbar</td><td>Arrow keys move focus between the buttons.</td></tr>
+              <tr><td>Search</td><td>Enter fires <code>search</code>. Escape clears the field.</td></tr>
+              <tr><td>Sheet</td><td>Escape closes, unless <code>no-dismiss</code> is set.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="preferences">
+        <h2>Preferences</h2>
+        <ul>
+          <li><code>prefers-reduced-motion: reduce</code> drops the elastic press, the menu morph, the sheet slide, and the thumb's bounce. State still changes immediately.</li>
+          <li><code>prefers-reduced-transparency: reduce</code> replaces the transmitted backdrop with an opaque fill, so the control stays legible without relying on blur.</li>
+          <li><code>forced-colors: active</code> paints the slab with <code>Canvas</code> and <code>CanvasText</code> and hides the decorative rim.</li>
+        </ul>
+        <p>This site does the same for its own motion. The plate scroller, the command palette, and the reveal of the opener all sit still when reduced motion is requested. Touch targets on this site are at least 44 by 44 pixels, including the navigation, the copy buttons, and the playground choices.</p>
+      </section>
+
+      <section id="try">
+        <h2>Try the keys</h2>
+        <p>Tab into this row. Space toggles the switch. Arrows move the slider. Enter on the search field fires a search you will not see leave the page.</p>
+        <glass-scene class="lab__stage" data-src="img/city.webp" data-ground="photo">
+          <div class="lab__row">
+            <glass-switch aria-label="Wi-Fi"></glass-switch>
+            <glass-slider value="40" aria-label="Brightness" style="width:min(220px,46vw)"></glass-slider>
+            <glass-search aria-label="Search the docs" placeholder="Search" style="width:min(220px,100%)"></glass-search>
+          </div>
+        </glass-scene>
+      </section>
+    </div>
+  </div>
+</main>
+<!--include:foot-->
+<script type="module" src="./src/boot.ts"></script>
+</body>
+</html>

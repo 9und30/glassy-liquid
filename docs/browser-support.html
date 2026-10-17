@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Browser support. glassy-liquid</title>
+<meta name="description" content="How glassy-liquid renders in Chromium, Safari 16.4+, iOS, and Firefox 103+: backdrop refraction, WebGL scenes, content filters, and a frosted fallback." />
+<!--include:head-->
+</head>
+<body data-page="browser-support">
+<!--include:nav-->
+<main id="main" class="doc">
+  <div class="wrap">
+    <header class="doc__head">
+      <p class="kicker">Reach</p>
+      <h1>One look. Four roads for the light.</h1>
+      <p class="lede">The rim, the tint, the shadow, and the motion are the same everywhere. Only the way the picture behind the glass is bent changes, and the library picks the road.</p>
+    </header>
+
+    <p class="lede support-lede">This browser is using <strong id="your-engine">a renderer</strong>.</p>
+
+    <glass-scene class="support-photo" data-src="img/glacier.webp" data-ground="photo">
+      <ul class="engines" aria-label="Renderers by browser">
+        <li><glass-surface class="engine" radius="20" appearance="dark" data-engine="backdrop"><b>Backdrop refraction</b><span>Chrome, Edge, Opera, Samsung Internet, Electron</span></glass-surface></li>
+        <li><glass-surface class="engine" radius="20" appearance="dark" data-engine="scene"><b>Scene rendering</b><span>Safari 16.4+, iOS, iPadOS, Firefox 103+</span></glass-surface></li>
+        <li><glass-surface class="engine" radius="20" appearance="dark" data-engine="css"><b>Calibrated frost</b><span>Older browsers</span></glass-surface></li>
+      </ul>
+    </glass-scene>
+
+    <div class="doc__body">
+      <section id="table">
+        <h2>Where each one runs</h2>
+        <div class="table-scroll" tabindex="0" aria-label="Renderers">
+          <table class="props">
+            <thead><tr><th>Renderer</th><th>Engine name</th><th>Where</th><th>How</th></tr></thead>
+            <tbody>
+              <tr><td>Backdrop refraction</td><td><code>backdrop</code></td><td>Chrome, Edge, Opera, Samsung Internet, and Electron</td><td>An SVG displacement map on <code>backdrop-filter</code>, over the live page. Nine-slice tiles, so a resize does not rebuild the map.</td></tr>
+              <tr><td>Scene, WebGL</td><td><code>scene-gl</code></td><td>Safari 16.4+ on macOS, every browser on iOS and iPadOS, and Firefox 103+, inside a scene whose backdrop is an image, video, or canvas</td><td>One shared WebGL context. Rounded rect, rim normals, refraction, magnification, dispersion, frost, and tone.</td></tr>
+              <tr><td>Scene, DOM</td><td><code>scene-dom</code></td><td>Those same browsers, when the scene's backdrop is live DOM</td><td>The scene filters its content layer once, with a subregion per surface. Keep these scenes small.</td></tr>
+              <tr><td>Calibrated frost</td><td><code>css</code></td><td>Anything that cannot do the two paths above</td><td>A <code>backdrop-filter</code> blur with the same rim light, tint, shadow, and motion.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+      <section id="scenes">
+        <h2>Why scenes exist</h2>
+        <p>WebKit does not apply SVG filters inside <code>backdrop-filter</code> (<a href="https://bugs.webkit.org/show_bug.cgi?id=245510">WebKit bug 245510</a>). No library can bend arbitrary page content there. Put the thing you want refracted inside <code>&lt;glass-scene&gt;</code>. Chromium ignores the scene and keeps the backdrop path, unless you set <code>force</code>.</p>
+        <p>Glass inside a scene is found automatically, including glass that lives in a shadow root.</p>
+      </section>
+      <section id="floor">
+        <h2>What you can count on</h2>
+        <ul>
+          <li>Current Chrome, Edge, Opera, and Samsung Internet. Safari 16.4+ on macOS, Firefox 103+, and the iOS and iPadOS browsers that use WebKit.</li>
+          <li>No WebGPU. The WebGL path is used only for scenes, and only where it is available.</li>
+          <li>Server rendering for the React, Vue, and Svelte bindings. Elements stay inert until hydration via <code>defer-hydration</code>, then take their roles.</li>
+          <li>A page that still reads correctly when refraction is unavailable, because the frost fallback keeps the same layout, type, and focus ring.</li>
+        </ul>
+      </section>
+    </div>
+  </div>
+</main>
+<!--include:foot-->
+<script type="module" src="./src/boot.ts"></script>
+</body>
+</html>

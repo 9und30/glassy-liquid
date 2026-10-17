@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>glassy-liquid from a CDN</title>
+<style>
+  html, body { margin: 0; height: 100%; }
+  body { font-family: "Iowan Old Style", Palatino, Georgia, serif; }
+  glass-scene { min-height: 100vh; min-height: 100svh; display: grid; place-items: center; padding: 24px; }
+  .card { width: min(320px, 100%); padding: 22px 22px 18px; display: grid; gap: 14px; color: inherit; }
+  .card h1 { margin: 0; font-size: 1.8rem; font-weight: 560; letter-spacing: -0.03em; }
+  .card p { margin: 0; font-family: system-ui, sans-serif; font-size: 0.95rem; }
+  .row { display: flex; align-items: center; justify-content: space-between; gap: 12px; font-family: system-ui, sans-serif; }
+</style>
+</head>
+<body>
+<main>
+<glass-scene src="/wallpaper.webp">
+  <glass-surface class="card" radius="28">
+    <h1>From the CDN bundle.</h1>
+    <p>This page imports <code>glassy-liquid/cdn</code>, the same file jsDelivr serves.</p>
+    <label class="row">Wi-Fi <glass-switch checked aria-label="Wi-Fi"></glass-switch></label>
+    <glass-slider value="58" aria-label="Brightness"></glass-slider>
+    <glass-button variant="prominent">Continue</glass-button>
+  </glass-surface>
+</glass-scene>
+</main>
+<script type="module" src="/src/main.js"></script>
+</body>
+</html>

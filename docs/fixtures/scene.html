@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>scene test</title>
+<style>
+  html,body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Inter",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  glass-scene{width:390px;height:420px;overflow:hidden}
+  .dom{width:390px;height:420px;overflow:hidden}
+  .content{position:absolute;inset:0;padding:18px;background:linear-gradient(160deg,#fff7e6,#e7f0ff);font-size:22px;line-height:1.3;font-weight:700;color:#1d1d1f}
+  .content b{color:#e0245e}
+  .content i{color:#0a84ff;font-style:normal}
+  glass-button svg{width:20px;height:20px}
+</style>
+</head>
+<body>
+<glass-scene src="../img/lake.webp" id="s1" style="position:relative">
+  <glass-surface radius="34" style="position:absolute;left:16px;top:200px;width:170px;height:170px;padding:16px">
+    <div style="font-size:13px;opacity:.75">Mountain lake</div><div style="font-size:44px;font-weight:300">14°</div>
+  </glass-surface>
+  <glass-surface radius="40" material="clear" style="position:absolute;left:204px;top:200px;width:170px;height:170px"></glass-surface>
+  <glass-button style="position:absolute;left:16px;top:40px">Edit</glass-button>
+  <glass-button shape="circle" material="clear" style="position:absolute;left:300px;top:40px" aria-label="Add"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M4 12h16M12 4v16"/></svg></glass-button>
+</glass-scene>
+<glass-scene class="dom" id="s2" style="position:relative">
+  <div class="content" glass-backdrop>
+    Liquid Glass bends the <b>light</b> that passes through it. Text and images under the glass stay <i>live</i> DOM. Liquid Glass bends the light that passes through it. Text and images under the glass stay live DOM. The quick brown fox jumps over the lazy dog 0123456789.
+  </div>
+  <glass-surface radius="capsule" style="position:absolute;left:24px;top:60px;width:342px;height:64px"></glass-surface>
+  <glass-surface radius="40" material="clear" style="position:absolute;left:60px;top:200px;width:150px;height:150px"></glass-surface>
+  <glass-switch style="position:absolute;left:260px;top:250px" checked></glass-switch>
+</glass-scene>
+<script type="module">
+  import "glassy-liquid/elements";
+  const q = new URLSearchParams(location.search);
+  if (q.get("noswitch")) document.querySelector("glass-switch").remove();
+  if (q.get("force")) for (const s of document.querySelectorAll("glass-scene")) s.setAttribute("force", "");
+  setTimeout(() => {
+    window.engines = [...document.querySelectorAll("glass-surface, glass-button")].map((e) => e.dataset.glassEngine);
+  }, 600);
+</script>
+</body>
+</html>

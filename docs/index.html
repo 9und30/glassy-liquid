@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>glassy-liquid. Light through glass.</title>
+<meta name="description" content="Liquid Glass for the web. Real refraction, specular light, and the iOS 26 controls as Web Components, with React, Vue, and Svelte." />
+<!--include:head-->
+</head>
+<body data-page="home">
+<!--include:nav-->
+<main id="main">
+  <glass-scene class="hero" id="top" data-ground="photo" backdrop=".hero__photo">
+    <img class="hero__photo" src="img/glacier.webp" alt="" width="2048" height="1152" fetchpriority="high" />
+    <p class="hero__kicker">Volume 01 <span>Optics</span></p>
+    <div class="lens" id="hero-lens" aria-hidden="true"></div>
+    <!--player-->
+    <p class="hero__engine"><span class="live-dot" aria-hidden="true"></span><span id="engine-note">Rendered live</span></p>
+  </glass-scene>
+
+  <section class="opener wrap" aria-labelledby="opener-title" data-ground="light">
+    <h1 id="opener-title" class="reveal">Light<br>through<br><em>glass.</em></h1>
+    <div class="opener__aside reveal">
+      <p class="lede">Real refraction, a specular rim, and the iOS 26 controls. Web Components, with the same components for React, Vue, and Svelte.</p>
+      <div class="actions">
+        <glass-button variant="prominent" size="large" href="./getting-started.html">Get started</glass-button>
+        <glass-button size="large" href="./playground.html">Open the playground</glass-button>
+      </div>
+      <div class="install">
+        <code id="install-cmd">npm install <span class="install__pkg">glassy-liquid</span></code>
+        <button class="copy" type="button" data-copy="#install-cmd"><span data-icon="copy"></span><span data-copy-label>Copy</span></button>
+      </div>
+      <p class="note" id="lens-hint">Drag the lens across the ice.</p>
+    </div>
+  </section>
+
+  <section class="wrap" aria-labelledby="index-title">
+    <h2 class="sr-only" id="index-title">What ships in the library</h2>
+    <dl class="index reveal">
+      <div><dt>01</dt><dd><b>Eleven live demos</b><span>Buttons through sheets, the iOS 26 set, each one live.</span></dd></div>
+      <div><dt>02</dt><dd><b>Four renderers</b><span>Picked per browser. The rim, tint, and motion stay the same.</span></dd></div>
+      <div><dt>03</dt><dd><b>No dependencies</b><span>About {{cdn-gzip}} gzip for every component and the WebGL path. No WebGPU.</span></dd></div>
+    </dl>
+  </section>
+
+  <section class="plates" id="highlights" aria-labelledby="plates-title">
+    <div class="wrap section-head">
+      <p class="kicker">Plates</p>
+      <h2 id="plates-title">Four ways the light moves.</h2>
+    </div>
+    <ul class="gallery__track" id="gallery-track" tabindex="0" aria-label="Highlight plates">
+      <li class="plate" data-title="Real refraction">
+        <glass-scene class="plate__media" data-src="img/lake.webp">
+          <div class="plate__art art-lens">
+            <glass-surface class="art-lens__slab" radius="48" material="clear" interactive></glass-surface>
+            <glass-surface class="art-lens__orb" radius="circle" material="clear" interactive></glass-surface>
+          </div>
+        </glass-scene>
+        <div class="plate__label">
+          <span class="plate__num">01</span>
+          <p><b>Real refraction.</b> The rim bends the lake, pixel by pixel, instead of frosting it flat.</p>
+        </div>
+      </li>
+      <li class="plate" data-title="Controls that turn to glass">
+        <glass-scene class="plate__media" data-src="img/glacier.webp">
+          <div class="plate__art">
+            <glass-surface class="panel" radius="28">
+              <label class="panel__row"><span class="panel__label"><span data-icon="wifi"></span>Wi-Fi</span><glass-switch checked aria-label="Wi-Fi"></glass-switch></label>
+              <label class="panel__row"><span class="panel__label"><span data-icon="moon"></span>Focus</span><glass-switch aria-label="Focus"></glass-switch></label>
+              <div class="panel__slider"><span data-icon="sun"></span><glass-slider value="64" aria-label="Brightness"></glass-slider></div>
+            </glass-surface>
+          </div>
+        </glass-scene>
+        <div class="plate__label">
+          <span class="plate__num">02</span>
+          <p><b>Controls that turn to glass.</b> Hold a thumb. It lifts into a lens, then settles.</p>
+        </div>
+      </li>
+      <li class="plate" data-title="Light that follows you">
+        <glass-scene class="plate__media" data-src="img/city.webp">
+          <div class="plate__art" style="gap:14px">
+            <glass-surface class="player" radius="30" material="clear" interactive>
+              <span class="player__art" style="background-image:url(img/silk.webp)" aria-hidden="true"></span>
+              <span class="player__meta"><b>Caustic Hour</b><span>Ostra Vale</span></span>
+              <span class="player__controls" aria-hidden="true"><span data-icon="prev"></span><span data-icon="play"></span><span data-icon="next"></span></span>
+            </glass-surface>
+          </div>
+        </glass-scene>
+        <div class="plate__label">
+          <span class="plate__num">03</span>
+          <p><b>Light that follows you.</b> Press the player. The highlight gathers under your finger.</p>
+        </div>
+      </li>
+      <li class="plate" data-title="The same glass on iPhone">
+        <glass-scene class="plate__media" data-src="img/fruit.webp">
+          <div class="plate__art art-phone">
+            <glass-toolbar class="art-phone__top">
+              <glass-button shape="circle" aria-label="Back"><span data-icon="back"></span></glass-button>
+              <glass-spacer></glass-spacer>
+              <glass-group>
+                <glass-button variant="plain" shape="circle" aria-label="Share"><span data-icon="share"></span></glass-button>
+                <glass-button variant="plain" shape="circle" aria-label="Favorite"><span data-icon="heart"></span></glass-button>
+              </glass-group>
+            </glass-toolbar>
+            <glass-tab-bar class="art-phone__tabs" value="home" aria-label="Sections">
+              <glass-tab value="home"><span data-icon="home"></span>Home</glass-tab>
+              <glass-tab value="saved"><span data-icon="stack"></span>Saved</glass-tab>
+              <glass-tab value="recent"><span data-icon="clock"></span>Recent</glass-tab>
+            </glass-tab-bar>
+          </div>
+        </glass-scene>
+        <div class="plate__label">
+          <span class="plate__num">04</span>
+          <p><b>The same glass on iPhone.</b> Inside a scene, Safari and Firefox refract too.</p>
+        </div>
+      </li>
+    </ul>
+    <div class="wrap pager" role="group" aria-label="Plate controls">
+      <glass-button class="pager__arrow" shape="circle" aria-label="Previous plate" data-step="-1"><span data-icon="back"></span></glass-button>
+      <div>
+        <div class="pager__dots">
+          <button class="pager__dot" type="button" aria-label="Real refraction" data-to="0"></button>
+          <button class="pager__dot" type="button" aria-label="Controls that turn to glass" data-to="1"></button>
+          <button class="pager__dot" type="button" aria-label="Light that follows you" data-to="2"></button>
+          <button class="pager__dot" type="button" aria-label="The same glass on iPhone" data-to="3"></button>
+        </div>
+        <p class="pager__caption" id="plate-caption"></p>
+      </div>
+      <glass-button class="pager__arrow" shape="circle" aria-label="Next plate" data-step="1"><span data-icon="forward"></span></glass-button>
+    </div>
+  </section>
+
+  <section class="measures-section" id="performance" aria-labelledby="perf-title" data-ground="light">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="kicker">Measure</p>
+        <h2 id="perf-title">Fast, because the maps stay still.</h2>
+        <p class="lede">Nine-slice shadows and rims never re-encode when a surface resizes. One shared ticker sleeps whenever nothing is moving.</p>
+      </div>
+      <ul class="measures">
+        <li data-metric="0"><p class="measures__value">{{cdn-gzip}}</p><p class="measures__label">gzip for every component, all renderers and the WebGL path</p><p class="measures__detail">@glass-sdk/liquid-glass: 99.8 kB DOM entry · 189.2 kB React entry, React itself excluded</p></li>
+        <li data-metric="2"><p class="measures__value">60 fps</p><p class="measures__label">while content scrolls under 16 surfaces</p><p class="measures__detail">@glass-sdk/liquid-glass: 15 fps · p95 frame 16.8 vs 83.4 ms</p></li>
+        <li data-metric="3"><p class="measures__value">60 fps</p><p class="measures__label">while 16 surfaces resize every frame</p><p class="measures__detail">@glass-sdk/liquid-glass: 10 fps · nine-slice maps never re-encode on resize</p></li>
+        <li data-metric="1"><p class="measures__value">99 ms</p><p class="measures__label">to set up 16 glass surfaces</p><p class="measures__detail">@glass-sdk/liquid-glass: 355 ms, generating maps with WebGPU on a real GPU</p></li>
+      </ul>
+      <p class="fineprint" id="bench-note">Headless Chrome 154.0.8037.92 with GPU and WebGPU enabled, 16 glass surfaces over a photo with live text, device pixel ratio 2, median of 3 runs, 2026-10-15. Frame rate is capped at the display refresh (60 Hz) on the measuring machine. Reproduce with <code>npm run bench</code>.</p>
+    </div>
+  </section>
+
+  <glass-scene class="finale" id="finale" data-src="img/lake.webp" data-ground="photo">
+    <glass-surface class="finale__card" radius="32" appearance="light">
+      <p class="kicker">Begin</p>
+      <h2>The web, seen through glass.</h2>
+      <div class="install">
+        <code id="install-cmd-2">npm install <span class="install__pkg">glassy-liquid</span></code>
+        <button class="copy" type="button" data-copy="#install-cmd-2"><span data-icon="copy"></span><span data-copy-label>Copy</span></button>
+      </div>
+      <div class="finale__actions">
+        <glass-button variant="prominent" href="./components.html">See the controls</glass-button>
+        <glass-button href="https://github.com/9und30/glassy-liquid">GitHub</glass-button>
+      </div>
+    </glass-surface>
+  </glass-scene>
+</main>
+<!--include:foot-->
+<script type="module" src="./src/boot.ts"></script>
+</body>
+</html>

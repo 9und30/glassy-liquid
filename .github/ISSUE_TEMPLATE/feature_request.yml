@@ -1,0 +1,55 @@
+name: Feature request
+description: A control, prop, binding, or API you want added
+title: "feat: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the idea. Describe the problem first, then the API you have in mind.
+  - type: checkboxes
+    id: searched
+    attributes:
+      label: Before you file
+      options:
+        - label: I searched the existing issues and this has not been requested yet.
+          required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What you cannot do with glassy-liquid today, and why it matters for your project.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposal
+      description: The API you have in mind. New components and props ship as a Web Component plus matching React, Vue, and Svelte bindings, so show how you would use it in the framework you care about.
+    validations:
+      required: true
+  - type: dropdown
+    id: scope
+    attributes:
+      label: Area
+      multiple: true
+      options:
+        - New component
+        - Existing component
+        - Glass material or rendering
+        - React, Vue, or Svelte binding
+        - Theming or CSS
+        - Accessibility
+        - Docs
+    validations:
+      required: false
+  - type: textarea
+    id: references
+    attributes:
+      label: References
+      description: The Apple control or behavior you want to match, screenshots, or other libraries that already do this.
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives
+      description: Workarounds you tried.

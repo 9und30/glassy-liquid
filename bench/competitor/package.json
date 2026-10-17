@@ -1,0 +1,14 @@
+{
+  "name": "bench-competitor",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "postinstall": "node ../../scripts/build-competitor.mjs --bundles-only"
+  },
+  "dependencies": {
+    "@glass-sdk/liquid-glass": "0.0.2",
+    "esbuild": "^0.28.2",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0"
+  }
+}

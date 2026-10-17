@@ -1,0 +1,235 @@
+{
+  "name": "glassy-liquid",
+  "version": "0.1.0",
+  "description": "Apple-style Liquid Glass for the web: real refraction, specular light and fluid iOS 26 controls as framework-agnostic Web Components with React, Vue and Svelte bindings.",
+  "author": "thirtynine (https://github.com/9und30)",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": [
+    "./dist/elements.js",
+    "./dist/glassy-liquid.min.js",
+    "./dist/react/index.js",
+    "./dist/vue/index.js",
+    "./dist/svelte/actions.js",
+    "./dist/scene/scene.js",
+    "./dist/components/button.js",
+    "./dist/components/menu.js",
+    "./dist/components/progressive-blur.js",
+    "./dist/components/search.js",
+    "./dist/components/selector.js",
+    "./dist/components/sheet.js",
+    "./dist/components/slider.js",
+    "./dist/components/surface.js",
+    "./dist/components/switch.js",
+    "./dist/components/toolbar.js",
+    "./src/elements.ts",
+    "./src/react/index.ts",
+    "./src/vue/index.ts",
+    "./src/svelte/actions.ts",
+    "./src/scene/scene.ts",
+    "./src/components/button.ts",
+    "./src/components/menu.ts",
+    "./src/components/progressive-blur.ts",
+    "./src/components/search.ts",
+    "./src/components/selector.ts",
+    "./src/components/sheet.ts",
+    "./src/components/slider.ts",
+    "./src/components/surface.ts",
+    "./src/components/switch.ts",
+    "./src/components/toolbar.ts"
+  ],
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./elements": {
+      "types": "./dist/elements.d.ts",
+      "import": "./dist/elements.js"
+    },
+    "./react": {
+      "types": "./dist/react/index.d.ts",
+      "import": "./dist/react/index.js"
+    },
+    "./vue": {
+      "types": "./dist/vue/index.d.ts",
+      "import": "./dist/vue/index.js"
+    },
+    "./svelte": {
+      "types": "./dist/svelte/index.d.ts",
+      "svelte": "./dist/svelte/index.js",
+      "import": "./dist/svelte/index.js"
+    },
+    "./svelte/actions": {
+      "types": "./dist/svelte/actions.d.ts",
+      "import": "./dist/svelte/actions.js"
+    },
+    "./components/*": {
+      "types": "./dist/components/*.d.ts",
+      "import": "./dist/components/*.js"
+    },
+    "./scene": {
+      "types": "./dist/scene/scene.d.ts",
+      "import": "./dist/scene/scene.js"
+    },
+    "./cdn": {
+      "types": "./dist/cdn.d.ts",
+      "import": "./dist/glassy-liquid.min.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "typesVersions": {
+    "*": {
+      "elements": [
+        "dist/elements.d.ts"
+      ],
+      "react": [
+        "dist/react/index.d.ts"
+      ],
+      "vue": [
+        "dist/vue/index.d.ts"
+      ],
+      "svelte": [
+        "dist/svelte/index.d.ts"
+      ],
+      "svelte/actions": [
+        "dist/svelte/actions.d.ts"
+      ],
+      "components/*": [
+        "dist/components/*.d.ts"
+      ],
+      "scene": [
+        "dist/scene/scene.d.ts"
+      ],
+      "cdn": [
+        "dist/cdn.d.ts"
+      ]
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "liquid-glass",
+    "liquid glass",
+    "glassmorphism",
+    "refraction",
+    "web-components",
+    "custom-elements",
+    "webgl",
+    "react",
+    "vue",
+    "svelte",
+    "ios",
+    "ui",
+    "components"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "node scripts/build.mjs",
+    "docs:build": "vite build",
+    "docs:preview": "vite preview",
+    "examples:build": "npm run build --prefix examples/vanilla-cdn && npm run build --prefix examples/react && npm run build --prefix examples/vue && npm run build --prefix examples/svelte",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p tests/tsconfig.json",
+    "test": "vitest run",
+    "test:e2e": "playwright test",
+    "check": "npm run typecheck && npm run test && npm run build",
+    "size": "size-limit",
+    "pack:check": "node scripts/pack-check.mjs",
+    "publint": "publint --strict",
+    "attw": "node scripts/attw.mjs",
+    "bench:competitor": "node scripts/build-competitor.mjs",
+    "bench": "node bench/run.mjs",
+    "test:all": "npm run typecheck && npm test && npm run test:e2e",
+    "prepublishOnly": "npm run lint && npm run typecheck && npm test && npm run build",
+    "prepare": "node scripts/build.mjs"
+  },
+  "peerDependencies": {
+    "react": ">=18",
+    "svelte": "^4.0.0 || ^5.0.0",
+    "vue": "^3.3.0"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    },
+    "svelte": {
+      "optional": true
+    },
+    "vue": {
+      "optional": true
+    }
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "workspaces": [
+    "examples/vanilla-cdn",
+    "examples/react",
+    "examples/vue",
+    "examples/svelte"
+  ],
+  "devEngines": {
+    "runtime": {
+      "name": "node",
+      "version": ">=22.18.0",
+      "onFail": "warn"
+    }
+  },
+  "devDependencies": {
+    "@arethetypeswrong/cli": "^0.18.5",
+    "@axe-core/playwright": "^4.11.0",
+    "@eslint/js": "^10.0.1",
+    "@playwright/test": "1.56",
+    "@size-limit/file": "^13.1.1",
+    "@sveltejs/vite-plugin-svelte": "^5.1.1",
+    "@types/node": "^22.20.5",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vue/test-utils": "^2.5.1",
+    "esbuild": "^0.28.2",
+    "eslint": "^10.12.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "eslint-plugin-svelte": "^3.23.1",
+    "eslint-plugin-vue": "^10.11.1",
+    "jsdom": "^25.0.1",
+    "prettier": "^3.9.10",
+    "prettier-plugin-svelte": "^4.1.1",
+    "publint": "^0.3.25",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "size-limit": "^13.1.1",
+    "svelte": "^5.57.2",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.71.2",
+    "vite": "^6.4.4",
+    "vite-node": "^3.2.4",
+    "vitest": "^4.1.11",
+    "vue": "^3.5.43"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/9und30/glassy-liquid.git"
+  },
+  "homepage": "https://9und30.github.io/glassy-liquid/",
+  "bugs": {
+    "url": "https://github.com/9und30/glassy-liquid/issues"
+  },
+  "size-limit": [
+    {
+      "name": "CDN bundle (every component, gzip)",
+      "path": "dist/glassy-liquid.min.js",
+      "limit": "36 kB",
+      "gzip": true
+    }
+  ]
+}

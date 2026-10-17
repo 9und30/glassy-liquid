@@ -1,0 +1,25 @@
+name: Docs problem
+description: A broken link, a wrong statement, or a missing explanation in the docs or the README
+title: "docs: "
+labels: ["documentation"]
+body:
+  - type: input
+    id: page
+    attributes:
+      label: Page
+      description: The URL of the docs page, or the README section.
+      placeholder: "https://9und30.github.io/glassy-liquid/getting-started.html#ssr"
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: What is wrong or missing
+      description: Quote the text, or describe the broken link.
+    validations:
+      required: true
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: Suggestion
+      description: What the docs should say instead, if you know.

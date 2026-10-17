@@ -1,0 +1,46 @@
+<footer class="foot">
+  <div class="wrap foot__grid">
+    <div>
+      <p class="foot__name"><em>glassy</em> liquid</p>
+      <p class="foot__legal">MIT licensed. Not affiliated with Apple. Liquid Glass describes the design language this library recreates. Backdrops are CC0 photographs plus one generated image. See <a href="https://github.com/9und30/glassy-liquid/blob/main/CREDITS.md">CREDITS.md</a>.</p>
+    </div>
+    <nav aria-label="Documentation">
+      <a href="./getting-started.html">Getting started</a>
+      <a href="./theming.html">Theming</a>
+      <a href="./accessibility.html">Accessibility</a>
+      <a href="./browser-support.html">Browser support</a>
+    </nav>
+    <nav aria-label="Project">
+      <a href="./components.html">Components</a>
+      <a href="./playground.html">Playground</a>
+      <a href="https://github.com/9und30/glassy-liquid">GitHub</a>
+      <a href="https://github.com/9und30/glassy-liquid/issues">Issues</a>
+      <a href="./llms.txt">llms.txt</a>
+    </nav>
+  </div>
+</footer>
+
+<div class="cmdk" id="cmdk" aria-hidden="true">
+  <div class="cmdk__backdrop" data-close></div>
+  <glass-surface class="cmdk__panel" radius="22" role="dialog" aria-modal="true" aria-label="Search the docs" appearance="light">
+    <div class="cmdk__field">
+      <span data-icon="search"></span>
+      <input id="cmdk-input" type="text" placeholder="Search components, options, guides" autocomplete="off" spellcheck="false" aria-controls="cmdk-list" />
+      <kbd>esc</kbd>
+    </div>
+    <div class="cmdk__list" id="cmdk-list" role="listbox"></div>
+    <div class="cmdk__foot"><span><kbd>↑</kbd><kbd>↓</kbd> navigate</span><span><kbd>↵</kbd> open</span></div>
+  </glass-surface>
+</div>
+
+<glass-sheet id="menu-sheet" detents="408" modal aria-label="Menu">
+  <nav class="menu-links" aria-label="Pages">
+    <a href="./index.html">Home</a>
+    <a href="./components.html">Components</a>
+    <a href="./playground.html">Playground</a>
+    <a href="./getting-started.html">Getting started</a>
+    <a href="./theming.html">Theming</a>
+    <a href="./accessibility.html">Accessibility</a>
+    <a href="./browser-support.html">Browser support</a>
+  </nav>
+</glass-sheet>

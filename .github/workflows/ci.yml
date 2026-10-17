@@ -1,0 +1,170 @@
+name: CI
+
+# Node comes from .nvmrc (22). Consumers may use Node >=18 (engines). Contributors need Node >=22.18 (devEngines) because size-limit does.
+
+on:
+  push:
+    branches:
+      - main
+      - "oss/**"
+  pull_request:
+
+permissions:
+  contents: read
+  pull-requests: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.head.sha || github.sha }}
+  cancel-in-progress: true
+
+jobs:
+  gate:
+    name: Deduplicate push and pull_request
+    runs-on: ubuntu-latest
+    outputs:
+      run: ${{ steps.decide.outputs.run }}
+    steps:
+      - name: Decide
+        id: decide
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EVENT_NAME: ${{ github.event_name }}
+          SHA: ${{ github.sha }}
+          REF: ${{ github.ref }}
+        run: |
+          set -euo pipefail
+          if [ "$EVENT_NAME" = "pull_request" ] || [ "$REF" = "refs/heads/main" ]; then
+            echo "run=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          # Skip a push only when an open pull request's head SHA is this commit.
+          # Merged and closed pull requests are not coverage. A squash commit on the
+          # base is not an open pull request head, so that push still runs.
+          owner="${GITHUB_REPOSITORY%%/*}"
+          branch="${REF#refs/heads/}"
+          match=0
+          for attempt in 1 2 3 4 5 6; do
+            if ! match=$(gh api --paginate --header "Accept: application/vnd.github+json" "repos/${GITHUB_REPOSITORY}/pulls?state=open&head=${owner}:${branch}&per_page=100" --jq "[.[] | select(.state == \"open\" and .head.sha == \"${SHA}\")] | length" | awk '{s+=$1} END {print s+0}'); then
+              echo "Could not list open pull requests for ${owner}:${branch}; running push CI."
+              echo "run=true" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+            if ! [[ "$match" =~ ^[0-9]+$ ]]; then
+              echo "Unexpected open pull request count '$match'; running push CI."
+              echo "run=true" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+            if [ "$match" != "0" ]; then
+              break
+            fi
+            sleep 5
+          done
+          if [ "$match" = "0" ]; then
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "run=false" >> "$GITHUB_OUTPUT"
+            echo "Open pull request head is $SHA; skipping the push pipeline."
+          fi
+
+  check:
+    name: Lint, types, unit, package
+    needs: gate
+    if: needs.gate.outputs.run == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Setup Node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Format
+        run: npm run format:check
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Unit tests
+        run: npm test
+
+      - name: Build
+        run: npm run build
+
+      - name: Docs site, both bases
+        run: |
+          npm run docs:build
+          DOCS_BASE=/glassy-liquid/ npx vite build --outDir ../docs-dist-pages
+          rm -rf docs-dist-pages
+
+      - name: Examples
+        run: npm run examples:build
+
+      - name: Pack contents
+        run: npm run pack:check
+
+      - name: publint
+        run: npm run publint
+
+      - name: Are the types wrong
+        run: npm run attw
+
+      - name: Size budget
+        run: npm run size
+
+  e2e:
+    name: Playwright
+    needs: gate
+    if: needs.gate.outputs.run == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Setup Node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        id: playwright-cache
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('package-lock.json') }}
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+
+      - name: Install software OpenGL
+        run: sudo apt-get update && sudo apt-get install -y xvfb mesa-utils libgl1-mesa-dri libglx-mesa0 libgl1 libegl1
+
+      - name: End-to-end tests
+        # Headed Firefox under xvfb so WebGL is available. Chromium and WebKit stay headless.
+        run: xvfb-run --auto-servernum --server-args="-screen 0 1280x1024x24" npm run test:e2e
+        env:
+          MOZ_DISABLE_CONTENT_SANDBOX: "1"
+          MOZ_WEBRENDER: "1"
+
+      - name: Upload Playwright artifacts
+        if: failure()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: playwright-report
+          path: |
+            playwright-report/
+            test-results/
+          if-no-files-found: ignore
+          retention-days: 14

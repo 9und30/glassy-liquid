@@ -1,0 +1,42 @@
+/** Small stroke icon set in the spirit of SF Symbols (24px grid, currentColor). */
+const s = (d: string, width = "2") =>
+  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${width}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
+const f = (d: string) => `<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">${d}</svg>`;
+
+export const icons = {
+  back: s(`<path d="M15 18l-6-6 6-6"/>`, "2.4"),
+  forward: s(`<path d="M9 18l6-6-6-6"/>`, "2.4"),
+  chevron: s(`<path d="M6 9l6 6 6-6"/>`, "2.2"),
+  plus: s(`<path d="M12 5v14M5 12h14"/>`, "2.3"),
+  search: s(`<circle cx="10.5" cy="10.5" r="6.5"/><path d="M20 20l-4.6-4.6"/>`, "2.3"),
+  more: f(`<circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/>`),
+  share: s(`<path d="M12 3v12M8 7l4-4 4 4M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/>`),
+  heart: s(`<path d="M12 20.5s-7.5-4.6-9.6-9.2A5.3 5.3 0 0 1 12 6.2a5.3 5.3 0 0 1 9.6 5.1C19.5 15.9 12 20.5 12 20.5z"/>`),
+  home: f(`<path d="M12 3.2l9 8.1h-2.6V20a1 1 0 0 1-1 1h-3.6v-6.2h-3.6V21H6.6a1 1 0 0 1-1-1v-8.7H3z"/>`),
+  stack: s(`<rect x="3.5" y="7" width="17" height="13" rx="3"/><path d="M6.5 4h11"/>`),
+  clock: s(`<circle cx="12" cy="12" r="8.6"/><path d="M12 7.5V12l3 2"/>`),
+  person: s(`<circle cx="12" cy="8" r="3.8"/><path d="M4.5 20.5c.9-3.7 3.9-5.8 7.5-5.8s6.6 2.1 7.5 5.8"/>`),
+  play: f(`<path d="M7 4.8v14.4a1 1 0 0 0 1.5.86l11.9-7.2a1 1 0 0 0 0-1.72L8.5 3.94A1 1 0 0 0 7 4.8z"/>`),
+  pause: f(`<rect x="6" y="4.5" width="4" height="15" rx="1.2"/><rect x="14" y="4.5" width="4" height="15" rx="1.2"/>`),
+  next: f(`<path d="M3.5 6.6v10.8a.8.8 0 0 0 1.2.7l8-5.4a.8.8 0 0 0 0-1.4l-8-5.4a.8.8 0 0 0-1.2.7zM12 6.6v10.8a.8.8 0 0 0 1.2.7l8-5.4a.8.8 0 0 0 0-1.4l-8-5.4a.8.8 0 0 0-1.2.7z"/>`),
+  prev: f(`<path d="M20.5 17.4V6.6a.8.8 0 0 0-1.2-.7l-8 5.4a.8.8 0 0 0 0 1.4l8 5.4a.8.8 0 0 0 1.2-.7zM12 17.4V6.6a.8.8 0 0 0-1.2-.7l-8 5.4a.8.8 0 0 0 0 1.4l8 5.4a.8.8 0 0 0 1.2-.7z"/>`),
+  mic: s(`<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/>`),
+  wifi: s(`<path d="M2.5 9a14 14 0 0 1 19 0M5.5 12.4a9.5 9.5 0 0 1 13 0M8.6 15.8a5 5 0 0 1 6.8 0"/><circle cx="12" cy="19" r="1" fill="currentColor"/>`),
+  plane: s(`<path d="M10.5 20.5l1.5-1 1.5 1v-4l7.5 2.5v-2.2L13.5 11V5a1.5 1.5 0 0 0-3 0v6L3 16.8V19l7.5-2.5z"/>`),
+  moon: s(`<path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/>`),
+  sun: s(`<circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M4.6 4.6l1.4 1.4M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4L6 18M18 6l1.4-1.4"/>`),
+  trash: s(`<path d="M4 7h16M9.5 7V4.5h5V7M6.5 7l1 13h9l1-13"/>`),
+  copy: s(`<rect x="8" y="8" width="12" height="12" rx="2.5"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/>`),
+  check: s(`<path d="M5 12.5l4.5 4.5L19 7.5"/>`, "2.4"),
+  pin: s(`<path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.4"/>`),
+  bolt: s(`<path d="M13 2.5L5 13.5h6l-1 8 8-11h-6z"/>`),
+  menu: s(`<path d="M4 7h16M4 12h16M4 17h16"/>`),
+  heartFill: f(`<path d="M12 20.5s-7.5-4.6-9.6-9.2A5.3 5.3 0 0 1 12 6.2a5.3 5.3 0 0 1 9.6 5.1C19.5 15.9 12 20.5 12 20.5z"/>`),
+  shuffle: s(`<path d="M3.5 7h3.2c2.2 0 3.6 1.1 4.8 3l1.9 3.1c1.2 1.9 2.6 2.9 4.8 2.9h2.3M3.5 17h3.2c1.7 0 2.9-.7 3.9-1.9M14.2 8.9c1-1.2 2.2-1.9 3.9-1.9h2.4M18 4.5L20.5 7 18 9.5M18 14.5l2.5 2.5-2.5 2.5"/>`),
+  repeat: s(`<path d="M4.5 11V9.5a3 3 0 0 1 3-3h12M17 4l2.5 2.5L17 9M19.5 13v1.5a3 3 0 0 1-3 3h-12M7 20l-2.5-2.5L7 15"/>`),
+  repeatOne: s(`<path d="M4.5 11V9.5a3 3 0 0 1 3-3h12M17 4l2.5 2.5L17 9M19.5 13v1.5a3 3 0 0 1-3 3h-12M7 20l-2.5-2.5L7 15"/><path d="M11.4 10.6l1.3-.9v4.6" stroke-width="1.7"/>`),
+  speaker: s(`<path d="M4 9.5h3.2L12 5.5v13l-4.8-4H4z"/><path d="M15.5 9.5a3.6 3.6 0 0 1 0 5"/>`),
+  speakerLoud: s(`<path d="M4 9.5h3.2L12 5.5v13l-4.8-4H4z"/><path d="M15.5 9.5a3.6 3.6 0 0 1 0 5M18.3 6.8a7.4 7.4 0 0 1 0 10.4"/>`),
+  queue: s(`<path d="M4 6.5h12M4 11.5h12M4 16.5h7M16.5 14v6l4.5-3z"/>`),
+  arrow: s(`<path d="M5 12h14M13 6l6 6-6 6"/>`),
+} as const;

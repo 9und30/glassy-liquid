@@ -1,0 +1,16 @@
+{
+  "name": "glassy-liquid-example-vanilla",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --port 5201 --host 127.0.0.1",
+    "build": "vite build",
+    "preview": "vite preview --port 5201 --host 127.0.0.1"
+  },
+  "dependencies": {
+    "glassy-liquid": "file:../.."
+  },
+  "devDependencies": {
+    "vite": "^6.4.4"
+  }
+}
