@@ -137,7 +137,7 @@ The site is published on GitHub Pages as a project site at <https://9und30.githu
 - The package ships `dist/`, `README.md`, and `LICENSE` (`files` in `package.json`). `dist/docs/llms.txt` and `dist/docs/llms-full.txt` are the agent docs for consumers.
 - Every entry point is listed in `exports` and `typesVersions`, and its files in the required list in `scripts/pack-check.mjs`. A module that registers elements or otherwise has effects on import is also listed in `sideEffects`, with both its `dist/` and its `src/` path.
 - `.github/workflows/release.yml` only packs a draft and never publishes. `.github/workflows/docs-pages.yml` deploys the docs only when run by hand. Do not run `npm publish`, deploy the docs, or change repository settings unless the maintainer asks.
-- Record user-facing changes in `CHANGELOG.md`. Until the first publish they go under `[0.1.0] - Unreleased`. At publish time, replace `Unreleased` with the date and start a new `[Unreleased]` section above it.
+- Record user-facing changes in `CHANGELOG.md` under `[Unreleased]`. At publish time, turn `[Unreleased]` into the new version with the date and start a new empty `[Unreleased]` section above it.
 
 ## Commits and branches
 
