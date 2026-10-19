@@ -14,6 +14,7 @@
 import {
   devicePixelRatio,
   nextId,
+  prefersReducedTransparency,
   supportsBackdropFilter,
   supportsBackdropSvg,
   watchMedia,
@@ -261,6 +262,7 @@ export class GlassSurface {
         "(resolution: " + (typeof window !== "undefined" ? window.devicePixelRatio : 1) + "dppx)",
         () => this.invalidate(),
       ),
+      watchMedia("(prefers-reduced-transparency: reduce)", () => this.invalidate()),
     );
     this.width = host.offsetWidth;
     this.height = host.offsetHeight;
@@ -411,8 +413,19 @@ export class GlassSurface {
     fs.borderRadius = `${m.radius}px`;
     fs.setProperty("--gl-fill", spec.fill);
     this.renderShadow(m.radius, spec, dpr);
-    this.host.style.setProperty("--gl-fg", spec.foreground);
-    this.host.style.setProperty("--gl-text-shadow", spec.textShadow);
+    // Reduced transparency makes the glass opaque (styles.ts), except where it
+    // is meant to show what lies behind: no backdrop, or a transparent fill.
+    // Content follows the opaque material either way, since a see-through
+    // control usually sits on other glass.
+    const reduced = prefersReducedTransparency();
+    const solid =
+      reduced &&
+      this.opts.backdrop &&
+      (this.opts.fill === null || parseColor(this.opts.fill)?.[3] !== 0);
+    if (solid) fs.setProperty("--gl-solid", spec.solid);
+    else fs.removeProperty("--gl-solid");
+    this.host.style.setProperty("--gl-fg", reduced ? spec.solidForeground : spec.foreground);
+    this.host.style.setProperty("--gl-text-shadow", reduced ? "none" : spec.textShadow);
     // CSS hook for content that styles itself per glass appearance.
     if (this.host.dataset.glassAppearance !== this.appearanceValue)
       this.host.dataset.glassAppearance = this.appearanceValue;
@@ -426,7 +439,7 @@ export class GlassSurface {
         "--gl-tint",
         `rgb(${(tint[0] * 255) | 0} ${(tint[1] * 255) | 0} ${(tint[2] * 255) | 0})`,
       );
-      fs.setProperty("--gl-tint-opacity", String(Math.min(1, 0.88 * tint[3])));
+      fs.setProperty("--gl-tint-opacity", String(Math.min(1, (solid ? 1 : 0.88) * tint[3])));
     } else {
       fs.setProperty("--gl-tint-opacity", "0");
     }

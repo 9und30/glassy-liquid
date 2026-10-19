@@ -31,6 +31,10 @@ export interface MaterialSpec {
   fallbackBlur: number;
   /** Fill used by the CSS-only fallback. */
   fallbackFill: string;
+  /** Opaque fill under `prefers-reduced-transparency: reduce`. */
+  solid: string;
+  /** Foreground on that opaque fill. */
+  solidForeground: string;
 }
 
 const lightRim: RimConfig = { ...defaultRim };
@@ -62,6 +66,8 @@ export const materials: Record<GlassMaterial, Record<GlassAppearance, MaterialSp
       textShadow: "none",
       fallbackBlur: 20,
       fallbackFill: "rgba(255,255,255,0.58)",
+      solid: "#f2f2f7",
+      solidForeground: "rgba(0,0,0,0.88)",
     },
     // Dark regular (notifications, menus at night): heavily frosted and dimmed
     // enough that white text stays ≥ 4.5:1 over bright photos.
@@ -80,6 +86,8 @@ export const materials: Record<GlassMaterial, Record<GlassAppearance, MaterialSp
       textShadow: "none",
       fallbackBlur: 20,
       fallbackFill: "rgba(28,28,30,0.64)",
+      solid: "#1c1c1e",
+      solidForeground: "rgba(255,255,255,0.94)",
     },
   },
   clear: {
@@ -97,6 +105,9 @@ export const materials: Record<GlassMaterial, Record<GlassAppearance, MaterialSp
       textShadow: "0 0 1px rgba(0,0,0,.28), 0 1px 3px rgba(0,0,0,.34), 0 0 14px rgba(0,0,0,.26)",
       fallbackBlur: 3,
       fallbackFill: "rgba(255,255,255,0.08)",
+      // Opaque light glass needs dark text, so clear glass drops its white text there.
+      solid: "#f2f2f7",
+      solidForeground: "rgba(0,0,0,0.88)",
     },
     dark: {
       blur: 0,
@@ -110,6 +121,8 @@ export const materials: Record<GlassMaterial, Record<GlassAppearance, MaterialSp
       textShadow: "0 0 1px rgba(0,0,0,.3), 0 1px 3px rgba(0,0,0,.36), 0 0 14px rgba(0,0,0,.28)",
       fallbackBlur: 3,
       fallbackFill: "rgba(0,0,0,0.16)",
+      solid: "#1c1c1e",
+      solidForeground: "rgba(255,255,255,0.94)",
     },
   },
 };

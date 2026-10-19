@@ -58,7 +58,7 @@
         <h2>Preferences</h2>
         <ul>
           <li><code>prefers-reduced-motion: reduce</code> drops the elastic press, the menu morph, the sheet slide, and the thumb's bounce. State still changes immediately.</li>
-          <li><code>prefers-reduced-transparency: reduce</code> replaces the transmitted backdrop with an opaque fill, so the control stays legible without relying on blur.</li>
+          <li><code>prefers-reduced-transparency: reduce</code> replaces the transmitted backdrop with an opaque fill, light or dark to match the glass appearance, and switches text and icons to the matching color, for both materials. Glass without a backdrop or with a transparent fill stays see-through. Switch, slider, and selection thumbs stay solid instead of lifting into a lens.</li>
           <li><code>forced-colors: active</code> paints the slab with <code>Canvas</code> and <code>CanvasText</code> and hides the decorative rim.</li>
         </ul>
         <p>This site does the same for its own motion. The plate scroller, the command palette, and the reveal of the opener all sit still when reduced motion is requested. Touch targets on this site are at least 44 by 44 pixels, including the navigation, the copy buttons, and the playground choices.</p>
