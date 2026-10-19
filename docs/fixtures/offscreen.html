@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>offscreen test</title>
+<style>
+  html,body{margin:0;font-family:system-ui,sans-serif}
+  .spacer{height:2500px;background:linear-gradient(#e7eef2,#9bb7c9)}
+  .far{height:6000px;background:linear-gradient(#9bb7c9,#e7eef2)}
+  glass-scene{width:320px;height:200px;overflow:hidden}
+  #tall{height:3000px}
+  glass-scene canvas{position:absolute;inset:0;width:100%;height:100%}
+  .card{display:block;width:280px;height:100px;margin:20px}
+</style>
+<script>
+  // Counts what the library asks the browser for. The page's own animation
+  // uses timers, so every animation frame request here comes from the glass.
+  window.counts = { frames: 0, draws: 0, into: {} };
+  const raf = window.requestAnimationFrame.bind(window);
+  window.requestAnimationFrame = (cb) => {
+    window.counts.frames++;
+    return raf(cb);
+  };
+  // The WebGL renderer copies each glass's pixels into a canvas inside that glass.
+  const copy = CanvasRenderingContext2D.prototype.drawImage;
+  CanvasRenderingContext2D.prototype.drawImage = function (...args) {
+    const id = this.canvas.getRootNode().host?.id;
+    if (id) window.counts.into[id] = (window.counts.into[id] ?? 0) + 1;
+    return copy.apply(this, args);
+  };
+  for (const C of [window.WebGLRenderingContext, window.WebGL2RenderingContext]) {
+    if (!C) continue;
+    const draw = C.prototype.drawArrays;
+    C.prototype.drawArrays = function (...args) {
+      window.counts.draws++;
+      return draw.apply(this, args);
+    };
+  }
+</script>
+</head>
+<body>
+<glass-scene id="tall" force>
+  <canvas glass-backdrop width="320" height="600"></canvas>
+  <glass-surface id="top" radius="30" style="position:absolute;left:20px;top:20px;width:280px;height:120px"></glass-surface>
+  <glass-surface id="bottom" radius="30" style="position:absolute;left:20px;top:2840px;width:280px;height:120px"></glass-surface>
+</glass-scene>
+<div class="spacer"></div>
+<glass-scene id="scene" force>
+  <canvas glass-backdrop width="320" height="200"></canvas>
+  <glass-surface id="lens" radius="36" style="position:absolute;left:24px;top:30px;width:272px;height:140px"></glass-surface>
+</glass-scene>
+<glass-surface id="card" class="card" radius="24"></glass-surface>
+<div class="far"></div>
+<glass-surface id="end" class="card" radius="20"></glass-surface>
+<script type="module">
+  import "glassy-liquid/elements";
+  const scenes = [...document.querySelectorAll("glass-scene")];
+  let t = 0;
+  // Live backdrops: redrawn on a timer, and each scene is told every time.
+  setInterval(() => {
+    t++;
+    for (const scene of scenes) {
+      const c = scene.querySelector("canvas");
+      const ctx = c.getContext("2d");
+      ctx.fillStyle = `hsl(${(t * 7) % 360} 70% 55%)`;
+      ctx.fillRect(0, 0, c.width, c.height);
+      ctx.fillStyle = "#fff";
+      ctx.fillRect((t * 5) % c.width, 0, 40, c.height);
+      scene.invalidate();
+    }
+  }, 16);
+  window.ready = true;
+</script>
+</body>
+</html>

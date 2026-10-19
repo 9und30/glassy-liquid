@@ -32,7 +32,7 @@ import {
   type GlassMaterial,
   type MaterialSpec,
 } from "./materials.js";
-import { observeSize } from "./observe.js";
+import { observeSize, observeVisibility } from "./observe.js";
 import { ensureDocumentStyles } from "./styles.js";
 import { GlassFilter } from "./svg-filter.js";
 
@@ -213,6 +213,10 @@ export class GlassSurface {
   private appearanceValue: GlassAppearance = "light";
   /** Re-resolve the appearance on the next render (style reads are skipped while morphing). */
   private appearanceStale = true;
+  /** Whether the surface is far off screen. Its updates pause until it comes back. */
+  readonly offscreen: boolean = false;
+  /** An update was skipped while off screen. */
+  private stale?: boolean;
 
   constructor(host: HTMLElement, options: GlassOptions = {}, init: SurfaceInit = {}) {
     this.host = host;
@@ -263,6 +267,13 @@ export class GlassSurface {
         () => this.invalidate(),
       ),
       watchMedia("(prefers-reduced-transparency: reduce)", () => this.invalidate()),
+      observeVisibility(host, (visible) => {
+        (this as { offscreen: boolean }).offscreen = !visible;
+        if (!visible) return;
+        if (this.stale) this.render();
+        // A scene skips hidden glass, so it draws this one again.
+        else this.scene?.update();
+      }),
     );
     this.width = host.offsetWidth;
     this.height = host.offsetHeight;
@@ -332,8 +343,8 @@ export class GlassSurface {
   invalidate(): void {
     this.appearanceStale = true;
     if (this.frame) return;
-    if (typeof requestAnimationFrame !== "function") {
-      this.render();
+    if (this.offscreen || typeof requestAnimationFrame !== "function") {
+      this.update();
       return;
     }
     this.frame = requestAnimationFrame(() => {
@@ -344,9 +355,18 @@ export class GlassSurface {
 
   private resize(w: number, h: number): void {
     if (Math.abs(w - this.width) < 0.01 && Math.abs(h - this.height) < 0.01) return;
+    // Glass shown again after display: none renders before it is painted, even
+    // if it was off screen when it lost its box (the observer reports no change).
+    const shown = !this.width || !this.height;
     this.width = w;
     this.height = h;
-    this.render();
+    this.update(shown);
+  }
+
+  /** Render, or while far off screen (unless forced), once the surface comes back. */
+  private update(force?: boolean): void {
+    if (this.offscreen && !force) this.stale = true;
+    else this.render();
   }
 
   /** Effective appearance, as of the last render. */
@@ -393,6 +413,7 @@ export class GlassSurface {
 
   /** Re-render now. Cheap: map tiles are cached and only changed attributes are written. */
   render(): void {
+    this.stale = false;
     const m = this.metrics;
     if (this.appearanceStale || this.opts.appearance !== "auto") {
       this.appearanceStale = false;

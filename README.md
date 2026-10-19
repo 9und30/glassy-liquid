@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/9und30/glassy-liquid/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/9und30/glassy-liquid/actions/workflows/ci.yml)
 [![npm](https://img.shields.io/npm/v/glassy-liquid)](https://www.npmjs.com/package/glassy-liquid)
-[![gzip size](https://img.shields.io/badge/gzip-35.9%20kB-0a84ff)](#performance)
+[![gzip size](https://img.shields.io/badge/gzip-36.0%20kB-0a84ff)](#performance)
 [![license: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
 Apple-style Liquid Glass for the web: real refraction, the core iOS 26 Liquid Glass controls, and typed bindings for Web Components, React, Vue, and Svelte.
@@ -18,7 +18,7 @@ Apple-style Liquid Glass for the web: real refraction, the core iOS 26 Liquid Gl
 - **The core iOS 26 Liquid Glass controls.** Buttons, switches, sliders, a tab bar, a segmented control, menus, toolbars, search, sheets, and scroll-edge blur, plus a generic surface and a scene. Nineteen components, one look.
 - **Safari, iOS, and Firefox included.** Chromium refracts the live page. Inside `<glass-scene>`, WebKit and Firefox refract photos, video, and DOM through WebGL or a scoped content filter. Every other engine gets a calibrated frost with the same rim light, tint, shadow, and motion.
 - **Accessible by default.** `prefers-reduced-motion` drops the elasticity, `prefers-reduced-transparency` makes the material opaque, and forced colors switch to system colors. Prominent labels stay at a 4.5:1 contrast.
-- **About 35.9 kB gzip.** `dist/glassy-liquid.min.js` is 35.9 kB gzip and registers every element. Zero runtime dependencies. No WebGPU.
+- **About 36.0 kB gzip.** `dist/glassy-liquid.min.js` is 36.0 kB gzip and registers every element. Zero runtime dependencies. No WebGPU.
 - **Web Components, React, Vue, and Svelte.** One binding table in `src/bindings/specs.ts` drives all three frameworks. A parity test keeps them 1:1.
 
 > Not affiliated with Apple. Liquid Glass names the design language this library recreates.
@@ -712,13 +712,13 @@ Measured with `npm run bench` on 2026-10-15 (`bench/results.json`). Same scene i
 
 | | glassy-liquid | @glass-sdk/liquid-glass 0.0.2 |
 | --- | --- | --- |
-| Bundle, gzip | **35.9 kB** for everything | 99.8 kB DOM entry, 189.2 kB React entry (React excluded) |
+| Bundle, gzip | **36.0 kB** for everything | 99.8 kB DOM entry, 189.2 kB React entry (React excluded) |
 | Set up 16 surfaces | **99 ms** | 355 ms (WebGPU map generation) |
 | Content scrolling under glass | **60 fps** (p95 16.8 ms) | 15 fps (p95 83 ms) |
 | 16 surfaces resizing every frame | **60 fps** (p95 16.7 ms) | 10 fps (p95 133 ms) |
 | 16 surfaces moving every frame | **60 fps** (p95 16.8 ms) | 17 fps (p95 67 ms) |
 
-Nine-slice maps never re-encode on resize. Shadows and rims are cached images. One shared ticker runs only while something animates. Offscreen scenes do no work. WebGL scenes share one context and one texture per image URL. Chromatic dispersion is off by default on the backdrop path because splitting color channels costs several GPU passes per surface. Set `dispersion` on the surfaces where you want it. The CDN bundle (`dist/glassy-liquid.min.js`) is 35.9 kB gzip.
+Nine-slice maps never re-encode on resize. Shadows and rims are cached images. One shared ticker runs only while something animates. Scenes and glass far off screen do no work and catch up a viewport before they scroll back in. WebGL scenes share one context and one texture per image URL. Chromatic dispersion is off by default on the backdrop path because splitting color channels costs several GPU passes per surface. Set `dispersion` on the surfaces where you want it. The CDN bundle (`dist/glassy-liquid.min.js`) is 36.0 kB gzip.
 
 ## Coming from liquid-glass-react
 
@@ -769,7 +769,7 @@ The React entry starts with `"use client"`, so the components render from a Clie
 No. They are optional peer dependencies. Install the one you use.
 
 **How big is the CDN build?**
-`dist/glassy-liquid.min.js` is 35.9 kB gzip and registers every element. Framework bindings are separate entry points, so a React app does not download the Vue build.
+`dist/glassy-liquid.min.js` is 36.0 kB gzip and registers every element. Framework bindings are separate entry points, so a React app does not download the Vue build.
 
 **Can a coding agent read these docs?**
 Yes. The package ships `dist/docs/llms.txt` (overview, setup, and the export map) and `dist/docs/llms-full.txt` (plus this API reference and every component in every framework), generated from the same sources as the docs site. The docs site serves the same files at <https://9und30.github.io/glassy-liquid/llms.txt> and <https://9und30.github.io/glassy-liquid/llms-full.txt>. To point an agent at the installed version, add a line like this to your project's `AGENTS.md`: "Before writing glassy-liquid code, read `node_modules/glassy-liquid/dist/docs/llms-full.txt`."
