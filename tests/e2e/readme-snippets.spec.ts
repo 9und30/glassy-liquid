@@ -137,6 +137,7 @@ test.describe("README snippets", () => {
     await expect(page.locator("glass-button")).toHaveText("Continue");
     expect(await page.locator("glass-button").evaluate((el) => el.shadowRoot !== null)).toBe(true);
     await expect(page.locator("glass-scene")).toHaveAttribute("src", SCENE_PHOTO);
+    await expectFullHeightScene(page);
     expect(errors).toEqual([]);
   });
 
@@ -240,6 +241,7 @@ test.describe("README snippets", () => {
     await expect(page.locator("glass-switch")).toHaveAttribute("aria-label", "Wi-Fi");
     await expect(page.locator("glass-button")).toHaveText("Done");
     await expectBoundLevel(page);
+    await expectFullHeightScene(page);
     expect(errors).toEqual([]);
   });
 
@@ -273,12 +275,14 @@ test.describe("README snippets", () => {
     await expect(page.locator("glass-switch")).toHaveAttribute("aria-label", "Wi-Fi");
     await expect(page.locator("glass-button")).toHaveText("Done");
     await expectBoundLevel(page);
+    await expectFullHeightScene(page);
     expect(errors).toEqual([]);
   });
 
   test("Svelte components render a switch and a slider", async ({ page }) => {
     await mountSvelte(page, fence("svelte-settings").code, "glass-switch");
     await expectBoundLevel(page);
+    await expectFullHeightScene(page);
   });
 
   test("Svelte actions render a switch and a glass card", async ({ page }) => {
@@ -286,6 +290,16 @@ test.describe("README snippets", () => {
     await expect(page.locator(".card")).toHaveText("Glass card");
   });
 });
+
+// The framework quick starts are a whole screen. Without a height the scene is
+// only as tall as its controls, and the rest of the page stays blank.
+async function expectFullHeightScene(page: Page): Promise<void> {
+  const { scene, viewport } = await page.evaluate(() => ({
+    scene: document.querySelector("glass-scene")!.getBoundingClientRect().height,
+    viewport: innerHeight,
+  }));
+  expect(scene).toBeGreaterThanOrEqual(viewport);
+}
 
 async function expectBoundLevel(page: Page): Promise<void> {
   const readout = page.locator(".readout");

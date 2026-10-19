@@ -140,7 +140,7 @@ function done() {
 </script>
 
 <template>
-  <GlassScene src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/Iceberg_reflection_in_J%C3%B6kuls%C3%A1rl%C3%B3n_%28Unsplash%29.jpg/960px-Iceberg_reflection_in_J%C3%B6kuls%C3%A1rl%C3%B3n_%28Unsplash%29.jpg" style="background: linear-gradient(160deg, #9bb7c9, #e7eef2)">
+  <GlassScene src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/Iceberg_reflection_in_J%C3%B6kuls%C3%A1rl%C3%B3n_%28Unsplash%29.jpg/960px-Iceberg_reflection_in_J%C3%B6kuls%C3%A1rl%C3%B3n_%28Unsplash%29.jpg" style="height: 100vh; background: linear-gradient(160deg, #9bb7c9, #e7eef2)">
     <GlassSwitch v-model:checked="wifi" aria-label="Wi-Fi" />
     <GlassSlider v-model:value="level" @value-commit="save" />
     <GlassButton variant="prominent" @click="done">Done</GlassButton>
@@ -180,7 +180,7 @@ Svelte 5 and Svelte 4. The components ship as `.svelte` source (`svelte` export 
   }
 </script>
 
-<GlassScene src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/Iceberg_reflection_in_J%C3%B6kuls%C3%A1rl%C3%B3n_%28Unsplash%29.jpg/960px-Iceberg_reflection_in_J%C3%B6kuls%C3%A1rl%C3%B3n_%28Unsplash%29.jpg" style="background: linear-gradient(160deg, #9bb7c9, #e7eef2)">
+<GlassScene src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/Iceberg_reflection_in_J%C3%B6kuls%C3%A1rl%C3%B3n_%28Unsplash%29.jpg/960px-Iceberg_reflection_in_J%C3%B6kuls%C3%A1rl%C3%B3n_%28Unsplash%29.jpg" style="height: 100vh; background: linear-gradient(160deg, #9bb7c9, #e7eef2)">
   <GlassSwitch bind:checked={wifi} aria-label="Wi-Fi" />
   <GlassSlider bind:value={level} onValueCommit={save} />
   <p class="readout">{wifi ? "on" : "off"} {Math.round(level)}</p>
