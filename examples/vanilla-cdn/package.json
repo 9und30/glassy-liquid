@@ -11,6 +11,6 @@
     "glassy-liquid": "file:../.."
   },
   "devDependencies": {
-    "vite": "^6.4.4"
+    "vite": "^8.3.4"
   }
 }
