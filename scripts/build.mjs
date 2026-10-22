@@ -14,6 +14,7 @@ import { tmpdir } from "node:os";
 import { gzipSync } from "node:zlib";
 import { join, relative } from "node:path";
 import { pathToFileURL } from "node:url";
+import { minifyTemplatesPlugin } from "./minify-templates.mjs";
 
 const root = new URL("..", import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, "$1");
 const src = join(root, "src");
@@ -54,6 +55,7 @@ await build({
   target: "es2020",
   bundle: true,
   minify: true,
+  plugins: [minifyTemplatesPlugin(src)],
   legalComments: "none",
   logLevel: "warning",
 });

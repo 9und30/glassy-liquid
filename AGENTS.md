@@ -94,6 +94,7 @@ Edit the source, regenerate, and let the tests confirm:
 - Custom elements extend `GlassElement` when they are glass, dispatch plain DOM events (`change`, `input`, `select`, `toggle`, `search`, `detent`), and stay inert while `defer-hydration` is present.
 - Do not touch `window`, `document`, or `HTMLElement` at module scope in code the framework bindings import. They are imported during SSR.
 - Keep the CDN bundle within the `size-limit` budget in `package.json`.
+- The CDN build compacts templates marked `/* css */` or `/* glsl */` with `scripts/minify-templates.mjs`. Keep shader interfaces qualified as `uniform`, `attribute`, or `varying`; other names may be shortened in the bundle.
 - Match the comment density of the surrounding code. Comments explain why, not what.
 - Docs and community files use a plain hyphen, never an em dash or en dash. `tests/unit/readme-api.test.ts` checks the files it lists.
 - New runtime dependencies need a strong reason. The package has none today.
@@ -125,6 +126,8 @@ Pick the e2e specs that match the change while iterating:
 | A framework binding or SSR                    | the unit tests, then `tests/e2e/examples.spec.ts`                                                                      |
 | The docs site, navigation, or the hero player | `tests/e2e/docs.spec.ts`, `navigation.spec.ts`, `player.spec.ts`, `static-site.spec.ts`                                |
 | README code samples                           | `npm run build`, then `tests/e2e/readme-snippets.spec.ts`                                                              |
+
+Feature-specific checks live in `tests/e2e/hero-comparison.spec.ts`, `tests/e2e/slider-value.spec.ts`, `tests/e2e/context-dock.spec.ts`, and `tests/e2e/cdn-build.spec.ts`. Run them alongside the applicable specs above.
 
 CI (`.github/workflows/ci.yml`, workflow name `CI`) runs lint, format, typecheck, unit tests, build, the docs build with both bases, the examples, pack check, publint, attw, size, and Playwright on every pull request and on pushes to `main` and `oss/**`. The README badge points at that file with `?branch=main`. Keep the filename, the query, and the name.
 

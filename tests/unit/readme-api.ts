@@ -256,6 +256,11 @@ const docs: Record<ComponentName, ComponentDoc> = {
         description: "Snap increment. `0` keeps the value continuous.",
       },
       ticks: { type: "boolean", def: "`false`", description: "Draw tick marks at each step." },
+      showValue: {
+        type: "boolean",
+        def: "`false`",
+        description: "Show a floating value while dragging or keyboard-focused.",
+      },
       disabled: { type: "boolean", def: "`false`", description: "Disables the control." },
       name: { type: "string", def: "none", description: "Form field name." },
     },
@@ -291,6 +296,7 @@ const docs: Record<ComponentName, ComponentDoc> = {
     },
     notes: [
       "Keyboard: Arrow keys nudge, Home and End jump to the ends.",
+      "With `show-value`, the label uses `aria-valuetext` when provided, otherwise the numeric value. Update `aria-valuetext` as the value changes. Long labels are truncated to the slider width; leave space above the control and avoid clipping ancestors.",
       "Vue: `v-model:value`. Svelte: `bind:value`.",
     ],
   },

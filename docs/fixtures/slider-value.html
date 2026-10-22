@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Slider value test</title>
+<style>
+  body{margin:48px 24px;font-family:system-ui,sans-serif}
+  form{display:grid;gap:48px;width:min(320px,100%)}
+  button{justify-self:start}
+</style>
+</head>
+<body>
+<form id="form">
+  <button type="button" id="before">Before sliders</button>
+  <glass-slider id="value" min="-2" max="2" step="0.25" value="-0.5" show-value name="amount" aria-label="Amount"></glass-slider>
+  <glass-slider id="plain" value="40" aria-label="Plain"></glass-slider>
+  <glass-slider id="disabled" value="30" show-value disabled aria-label="Disabled"></glass-slider>
+  <glass-slider id="deferred" value="25" show-value defer-hydration aria-label="Deferred"></glass-slider>
+  <button type="button" id="after">After sliders</button>
+</form>
+<script type="module">
+  import "glassy-liquid/elements";
+</script>
+</body>
+</html>

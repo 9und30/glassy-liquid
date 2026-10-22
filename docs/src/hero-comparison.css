@@ -1,0 +1,64 @@
+/* Hallmark - component: material comparison - genre: editorial - theme: optical catalog
+ * Pre-emit critique: P5 H4 E4 S5 R5 V4. Existing tokens, instant feedback, native buttons.
+ */
+.hero-compare {
+  position: absolute;
+  z-index: 4;
+  top: var(--nav-clear);
+  right: var(--gutter-end);
+  width: min(19rem, calc(100% - var(--gutter) - var(--gutter-end)));
+  padding: var(--space-xs);
+  background: var(--color-chip);
+  color: var(--color-on-photo);
+  font-family: var(--font-body);
+}
+.hero-compare[hidden] { display: none; }
+.hero-compare__row { display: flex; align-items: center; justify-content: space-between; gap: var(--space-xs); }
+.hero-compare__label {
+  padding-inline-start: var(--space-2xs);
+  font-size: var(--text-xs);
+  font-weight: 500;
+  white-space: nowrap;
+}
+.hero-compare__buttons { display: flex; align-items: center; gap: var(--space-2xs); }
+.hero-compare button {
+  min-width: 4rem;
+  min-height: 44px;
+  padding: var(--space-xs);
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: var(--color-night-2);
+  color: var(--color-on-photo);
+  font: 500 var(--text-sm)/1 var(--font-body);
+  white-space: nowrap;
+  touch-action: manipulation;
+}
+.hero-compare button[aria-pressed="true"] { background: var(--color-paper); color: var(--color-ink); }
+@media (hover: hover) {
+  .hero-compare button:not(:disabled):hover { background: var(--color-paper-3); color: var(--color-ink); }
+}
+.hero-compare button:not(:disabled):active { background: var(--color-paper-2); color: var(--color-ink); }
+.hero-compare button:focus-visible { outline: 2px solid var(--color-on-photo); outline-offset: 2px; }
+.hero-compare button:disabled { opacity: 0.55; cursor: not-allowed; }
+.hero-compare__note {
+  min-height: 1.25em;
+  margin-block-start: var(--space-xs);
+  padding-inline: var(--space-2xs);
+  font-size: var(--text-xs);
+  line-height: 1.25;
+}
+@media (max-width: 44.99rem) {
+  .hero-compare { position: relative; top: auto; right: auto; width: 100%; }
+}
+@media (forced-colors: active) {
+  .hero-compare { background: Canvas; color: CanvasText; outline: 1px solid CanvasText; }
+  .hero-compare button { border: 1px solid ButtonText; }
+  .hero-compare button[aria-pressed="true"] {
+    border-color: Highlight;
+    outline: 2px solid Highlight;
+    outline-offset: -4px;
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+  .hero-compare button:focus-visible { outline: 2px solid CanvasText; outline-offset: 2px; }
+}

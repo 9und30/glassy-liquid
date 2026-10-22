@@ -1,4 +1,5 @@
 import "glassy-liquid/elements";
+import "./hero-comparison.css";
 import { GlassElement, attachPress, getSurface, glass, supportsBackdropSvg, supportsWebGL, updateAppearance, type GlassOptions } from "glassy-liquid";
 import { demos, glassProps } from "./demos";
 import { highlight, type Lang } from "./highlight";
@@ -14,6 +15,7 @@ import { initRouter, navigate, isDocsPage, perFrame, resolveHref, samePage } fro
 import { initNavIndicator } from "./nav-indicator";
 import { watchLoading } from "./skeleton";
 import { Scope } from "./scope";
+import { mountContextDock } from "./context-dock";
 
 const $ = <T extends Element = HTMLElement>(sel: string, root: ParentNode = document) => root.querySelector<T>(sel);
 const $$ = <T extends Element = HTMLElement>(sel: string, root: ParentNode = document) => Array.from(root.querySelectorAll<T>(sel));
@@ -199,12 +201,46 @@ function wireLens(scope: Scope): void {
   if (!hero || !lens) return;
   lens.style.position = "absolute";
   const surface = glass(lens, { radius: "circle", material: "clear", zoom: 1.18, refraction: 30, bezel: 42, dispersion: 0.35, specular: 1.15 });
+  const glassOptions = { ...surface.options };
+  const comparison = hero.querySelector<HTMLElement>("#hero-comparison");
+  const materialButtons = $$<HTMLButtonElement>("[data-lens-material]", comparison ?? hero);
+  const comparisonNote = hero.querySelector<HTMLElement>("#hero-comparison-note");
+  let material = "glass";
   // With reduced transparency an opaque lens would be a blank disc. A
   // transparent fill keeps it a ring of rim light that still drags over the photo.
   const reducedTransparency = matchMedia("(prefers-reduced-transparency: reduce)");
-  const fill = () => surface.set({ fill: reducedTransparency.matches ? "transparent" : undefined });
-  fill();
-  scope.on(reducedTransparency, "change", fill);
+  const paintComparison = () => {
+    const reduced = reducedTransparency.matches;
+    for (const button of materialButtons) {
+      button.disabled = reduced;
+      button.setAttribute("aria-pressed", String(!reduced && button.dataset.lensMaterial === material));
+    }
+    if (comparisonNote) comparisonNote.textContent = reduced
+      ? "Reduced transparency: rim only."
+      : material === "frost"
+        ? "Frost: blur without distortion."
+        : surface.engine === "css"
+          ? "Glass uses frost on this renderer."
+          : "Glass: refraction + magnification.";
+  };
+  const applyMaterial = () => {
+    surface.set({
+      ...glassOptions,
+      ...(material === "frost" && !reducedTransparency.matches
+        ? { material: "regular" as const, refraction: 0, zoom: 1, dispersion: 0 }
+        : {}),
+      fill: reducedTransparency.matches ? "transparent" : glassOptions.fill,
+    });
+    paintComparison();
+  };
+  for (const button of materialButtons) scope.on(button, "click", () => {
+    if (reducedTransparency.matches) return;
+    material = button.dataset.lensMaterial === "frost" ? "frost" : "glass";
+    applyMaterial();
+  });
+  applyMaterial();
+  scope.on(reducedTransparency, "change", applyMaterial);
+  if (comparison) comparison.hidden = false;
   const press = attachPress(lens, surface, { grow: 0.05 });
   scope.add(() => {
     press.dispose();
@@ -212,6 +248,9 @@ function wireLens(scope: Scope): void {
   });
   const deck = hero.querySelector<HTMLElement>(".deck");
   const engine = hero.querySelector<HTMLElement>(".hero__engine");
+  const badge = hero.querySelector<HTMLElement>(".hero__kicker");
+  const minHeight = hero.style.minHeight;
+  scope.add(() => { hero.style.minHeight = minHeight; });
   let fx = 0.62;
   let fy = 0.42;
   let moved = false;
@@ -228,7 +267,9 @@ function wireLens(scope: Scope): void {
   const apply = () => {
     const s = lens.offsetWidth || 160;
     const w = hero.clientWidth;
-    const h = hero.clientHeight;
+    const floatingComparison = comparison && getComputedStyle(comparison).position === "absolute";
+    if (!moved || !floatingComparison) hero.style.minHeight = minHeight;
+    let h = hero.clientHeight;
     let minX = 12;
     let maxX = w - s - 12;
     // At 320 the resting lens crosses the volume badge. Nudge it right.
@@ -244,15 +285,31 @@ function wireLens(scope: Scope): void {
     let x = Math.max(minX, Math.min(maxX, fx * w - s / 2));
     let y = Math.max(72, Math.min(h - s - 48, fy * h - s / 2));
     if (!moved) {
-      // The resting lens keeps clear of the player and the engine note.
-      for (const el of [deck, engine]) {
-        if (!el || !el.offsetWidth) continue;
-        const r = local(el);
-        const hit = x < r.right + 12 && x + s > r.left - 12 && y < r.bottom + 12 && y + s > r.top - 12;
-        if (!hit) continue;
-        if (r.right + 20 + s <= w - 12) x = r.right + 20;
-        else y = Math.max(72, r.top - s - 12);
+      // Check every obstacle together: moving clear of one can cross another.
+      const place = () => {
+        const obstacles = [comparison, deck, engine, badge]
+          .filter((el): el is HTMLElement => !!el?.offsetWidth).map(local);
+        const clear = (left: number, top: number) => left >= minX && left <= maxX && top >= 72 && top <= h - s - 12
+          && obstacles.every((r) => left + s <= r.left - 12 || left >= r.right + 12 || top + s <= r.top - 12 || top >= r.bottom + 12);
+        if (clear(x, y)) return { x, y };
+        let best: { x: number; y: number; distance: number } | null = null;
+        const xs = [x, minX, maxX, ...obstacles.flatMap((r) => [r.left - s - 12, r.right + 12])];
+        const ys = [y, 72, h - s - 12, ...obstacles.flatMap((r) => [r.top - s - 12, r.bottom + 12])];
+        for (const left of xs) for (const top of ys) {
+          const distance = (left - x) ** 2 + (top - y) ** 2;
+          if ((!best || distance < best.distance) && clear(left, top)) best = { x: left, y: top, distance };
+        }
+        return best;
+      };
+      let position = place();
+      if (!position && floatingComparison && engine) {
+        // Large text can leave no full-size slot; grow the photo only then.
+        const bottom = h - local(engine).bottom;
+        hero.style.minHeight = `${Math.ceil(local(comparison).bottom + s + 24 + engine.offsetHeight + bottom)}px`;
+        h = hero.clientHeight;
+        position = place();
       }
+      if (position) ({ x, y } = position);
     }
     lens.style.setProperty("--lens-x", `${x.toFixed(1)}px`);
     lens.style.setProperty("--lens-y", `${y.toFixed(1)}px`);
@@ -269,9 +326,9 @@ function wireLens(scope: Scope): void {
     ),
   );
   ro.observe(hero);
-  const badge = hero.querySelector(".hero__kicker");
   if (badge) ro.observe(badge);
   if (deck) ro.observe(deck);
+  if (comparison) ro.observe(comparison);
   void document.fonts.ready.then(() => {
     if (!moved && scope.alive) apply();
   });
@@ -306,6 +363,7 @@ function wireLens(scope: Scope): void {
   if (!note) return;
   const report = () => {
     note.textContent = engineNames[surface.engine] ?? engineNames.css!;
+    paintComparison();
   };
   report();
   scope.observe(new MutationObserver(report)).observe(lens, { attributes: true, attributeFilter: ["data-glass-engine"] });
@@ -902,6 +960,7 @@ function mountPage(scope: Scope): void {
   wireLens(scope);
   wirePlayer(scope);
   wireGallery(scope);
+  mountContextDock(main, scope);
   wirePlayground(scope);
   wireThemeLab(scope);
   markEngine();

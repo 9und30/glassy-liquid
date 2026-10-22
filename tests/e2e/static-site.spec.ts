@@ -36,8 +36,16 @@ for (const build of builds) {
       test.setTimeout(180_000);
       const out = resolve("test-results", `static-${build.port}`);
       execFileSync(
-        "npx",
-        ["vite", "build", "--outDir", out, "--emptyOutDir", "--logLevel", "warn"],
+        process.execPath,
+        [
+          resolve("node_modules/vite/bin/vite.js"),
+          "build",
+          "--outDir",
+          out,
+          "--emptyOutDir",
+          "--logLevel",
+          "warn",
+        ],
         {
           env: { ...process.env, DOCS_BASE: build.base, DOCS_ORIGIN: build.origin },
           stdio: "pipe",

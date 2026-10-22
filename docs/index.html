@@ -15,6 +15,16 @@
     <p class="hero__kicker">Volume 01 <span>Optics</span></p>
     <div class="lens" id="hero-lens" aria-hidden="true"></div>
     <!--player-->
+    <div class="hero-compare" id="hero-comparison" hidden>
+      <div class="hero-compare__row" role="group" aria-label="Lens material" aria-describedby="hero-comparison-note">
+        <span class="hero-compare__label" aria-hidden="true">Lens material</span>
+        <div class="hero-compare__buttons">
+          <button type="button" data-lens-material="glass" aria-pressed="true" aria-controls="hero-lens">Glass</button>
+          <button type="button" data-lens-material="frost" aria-pressed="false" aria-controls="hero-lens">Frost</button>
+        </div>
+      </div>
+      <p class="hero-compare__note" id="hero-comparison-note" aria-live="polite">Same lens. Same ice.</p>
+    </div>
     <p class="hero__engine"><span class="live-dot" aria-hidden="true"></span><span id="engine-note">Rendered live</span></p>
   </glass-scene>
 
@@ -129,6 +139,8 @@
       <glass-button class="pager__arrow" shape="circle" aria-label="Next plate" data-step="1"><span data-icon="forward"></span></glass-button>
     </div>
   </section>
+
+  <!--include:context-dock-->
 
   <section class="measures-section" id="performance" aria-labelledby="perf-title" data-ground="light">
     <div class="wrap">
