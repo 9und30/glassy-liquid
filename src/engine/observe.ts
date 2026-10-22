@@ -31,16 +31,18 @@ export function observeSize(el: Element, cb: ResizeCb): () => void {
   };
 }
 
+/**
+ * Reports when `el` moves far off screen or back near the viewport. Without
+ * IntersectionObserver it never fires, so callers start out visible.
+ */
 export function observeVisibility(el: Element, cb: VisibleCb): () => void {
-  if (typeof IntersectionObserver === "undefined") {
-    cb(true);
-    return () => {};
-  }
+  if (typeof IntersectionObserver === "undefined") return () => {};
   io ??= new IntersectionObserver(
     (entries) => {
       for (const e of entries) visibleCbs.get(e.target)?.(e.isIntersecting);
     },
-    { rootMargin: "200px" },
+    // A full viewport ahead, so glass is up to date before it scrolls in.
+    { rootMargin: "100%" },
   );
   visibleCbs.set(el, cb);
   io.observe(el);

@@ -6,11 +6,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+### Changed
+
+- Glass more than a viewport off screen pauses. It skips re-renders for resizes and for option, appearance, and pixel ratio changes, and catches up a viewport before it scrolls back in. A `<glass-scene>` off screen stops its frame loop, also for video backdrops, and a scene on screen skips WebGL draws for its glass that is far off screen. The new read-only `surface.offscreen` tells whether a surface is paused. Without `IntersectionObserver` (server, old engines) nothing pauses.
+
 ### Fixed
 
 - Glass stays readable with `prefers-reduced-transparency: reduce` (macOS "Reduce transparency"). The opaque fill used to be light gray in every case, so white text on dark or clear glass disappeared. It now follows the appearance, light or dark, for both materials, and text and icons switch to the matching color. Glass without a backdrop or with a transparent fill stays see-through, the backdrop filter is skipped behind the opaque fill, the segmented track turns opaque too, and switch, slider, and selection thumbs stay solid instead of lifting into a lens. `MaterialSpec` has two new fields for this, `solid` and `solidForeground`.
 - Docs site: with reduced transparency the nav bar, the hero player, and the hero lens are readable again, and the current section is underlined instead of marked by a glass pill.
 - The Vue and Svelte quick starts in the README give `GlassScene` a height of `100vh`, like the React one. Without it the scene was only as tall as its controls and the rest of the page stayed blank white.
+- A `<glass-scene>` that comes back into view redraws at once instead of waiting for the next scroll event.
 
 ## [0.1.0] - 2026-10-18
 

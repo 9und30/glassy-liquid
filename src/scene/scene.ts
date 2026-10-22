@@ -21,6 +21,7 @@
  */
 import { nextId, supportsBackdropSvg, supportsWebGL } from "../core/env.js";
 import { addTask, wake, type FrameTask } from "../core/ticker.js";
+import { observeVisibility } from "../engine/observe.js";
 import {
   rescanSurfaces,
   type GlassSurface,
@@ -64,7 +65,7 @@ export class GlassSceneElement extends HTMLElementBase implements SceneHost {
   private tex: GlTexture | null = null;
   private texVersion = -1;
   private visible = true;
-  private io: IntersectionObserver | null = null;
+  private unobserve?: () => void;
   private uid = nextId("scene");
   private dom: DomFilterRenderer | null = null;
   private backdropEl: Element | null = null;
@@ -133,18 +134,12 @@ export class GlassSceneElement extends HTMLElementBase implements SceneHost {
       ])
         this.addEventListener(t, this.poke, { capture: true, passive: true });
     }
-    if (!this.io && typeof IntersectionObserver !== "undefined") {
-      // Scenes off screen do no work at all; they catch up when they return.
-      this.io = new IntersectionObserver(
-        (entries) => {
-          const v = entries.some((e) => e.isIntersecting);
-          if (v && !this.visible) this.invalidate();
-          this.visible = v;
-        },
-        { rootMargin: "300px" },
-      );
-      this.io.observe(this);
-    }
+    // Scenes off screen do no work at all; they catch up when they return
+    // (the observer only reports changes, plus once when observing starts).
+    this.unobserve ??= observeVisibility(this, (visible) => {
+      this.visible = visible;
+      if (visible) this.invalidate();
+    });
     this.poke();
     rescanSurfaces();
   }
@@ -164,8 +159,8 @@ export class GlassSceneElement extends HTMLElementBase implements SceneHost {
       ])
         this.removeEventListener(t, this.poke, { capture: true });
       this.listening = false;
-      this.io?.disconnect();
-      this.io = null;
+      this.unobserve?.();
+      this.unobserve = undefined;
       this.removeTask?.();
       this.removeTask = null;
       this.teardownRenderers();
@@ -271,7 +266,7 @@ export class GlassSceneElement extends HTMLElementBase implements SceneHost {
     const tick = () => {
       this.mediaDirty = true;
       for (const b of this.bindings) b.dirty = true;
-      wake(this.task);
+      if (this.visible) wake(this.task);
       if (v.isConnected)
         this.videoHandle =
           "requestVideoFrameCallback" in v
@@ -307,7 +302,7 @@ export class GlassSceneElement extends HTMLElementBase implements SceneHost {
       dirty: true,
       update: () => {
         binding.dirty = true;
-        wake(this.task);
+        if (this.visible) wake(this.task);
       },
       destroy: () => {
         this.bindings.delete(binding);
@@ -329,7 +324,7 @@ export class GlassSceneElement extends HTMLElementBase implements SceneHost {
 
   private frame(now: number): boolean {
     const el = this.backdropEl;
-    if (!el || !this.mode || !this.bindings.size) return false;
+    if (!el || !this.mode || !this.bindings.size || !this.visible) return false;
     const br = el.getBoundingClientRect();
     if (this.mode === "gl") this.frameGl(el as MediaSource, br);
     else this.frameDom(el as HTMLElement, br);
@@ -397,6 +392,9 @@ export class GlassSceneElement extends HTMLElementBase implements SceneHost {
     const map = objectFitMap(el, el.clientWidth || br.width, el.clientHeight || br.height);
     if (!map) return;
     for (const b of this.bindings) {
+      // Glass far off screen draws into its own canvas when it comes back. The
+      // content filter cannot skip it: its region would stay where it was.
+      if (b.surface.offscreen) continue;
       const m = this.measure(b, br);
       if (!m || !b.canvas) continue;
       if (!b.dirty && m.key === b.last) continue;

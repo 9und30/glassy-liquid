@@ -118,13 +118,13 @@ On Linux without a GPU, headless Firefox has no WebGL, and the WebGL cases in `t
 
 Pick the e2e specs that match the change while iterating:
 
-| You changed                                   | Run at least                                                                                      |
-| --------------------------------------------- | ------------------------------------------------------------------------------------------------- |
-| A component's rendering or interaction        | `tests/e2e/components.spec.ts`, `interaction.spec.ts`, `menu-icons.spec.ts`, `legibility.spec.ts` |
-| The engine, materials, or a renderer          | `tests/e2e/engines.spec.ts`, `layout.spec.ts`, `contrast.spec.ts`, `reduced-transparency.spec.ts` |
-| A framework binding or SSR                    | the unit tests, then `tests/e2e/examples.spec.ts`                                                 |
-| The docs site, navigation, or the hero player | `tests/e2e/docs.spec.ts`, `navigation.spec.ts`, `player.spec.ts`, `static-site.spec.ts`           |
-| README code samples                           | `npm run build`, then `tests/e2e/readme-snippets.spec.ts`                                         |
+| You changed                                   | Run at least                                                                                                           |
+| --------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| A component's rendering or interaction        | `tests/e2e/components.spec.ts`, `interaction.spec.ts`, `menu-icons.spec.ts`, `legibility.spec.ts`                      |
+| The engine, materials, or a renderer          | `tests/e2e/engines.spec.ts`, `layout.spec.ts`, `contrast.spec.ts`, `reduced-transparency.spec.ts`, `offscreen.spec.ts` |
+| A framework binding or SSR                    | the unit tests, then `tests/e2e/examples.spec.ts`                                                                      |
+| The docs site, navigation, or the hero player | `tests/e2e/docs.spec.ts`, `navigation.spec.ts`, `player.spec.ts`, `static-site.spec.ts`                                |
+| README code samples                           | `npm run build`, then `tests/e2e/readme-snippets.spec.ts`                                                              |
 
 CI (`.github/workflows/ci.yml`, workflow name `CI`) runs lint, format, typecheck, unit tests, build, the docs build with both bases, the examples, pack check, publint, attw, size, and Playwright on every pull request and on pushes to `main` and `oss/**`. The README badge points at that file with `?branch=main`. Keep the filename, the query, and the name.
 
