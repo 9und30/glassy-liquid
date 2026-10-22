@@ -27,6 +27,45 @@ async function expectWithinSlider(slider: Locator): Promise<void> {
     .toBe(true);
 }
 
+async function countPointerListeners(slider: Locator): Promise<void> {
+  await slider.evaluate((host) => {
+    const listeners = new Map<string, Set<EventListenerOrEventListenerObject>>();
+    const update = (
+      type: string,
+      listener: EventListenerOrEventListenerObject | null,
+      added: boolean,
+    ) => {
+      if (!listener || !["pointermove", "pointerup", "pointercancel"].includes(type)) return;
+      let set = listeners.get(type);
+      if (!set) listeners.set(type, (set = new Set()));
+      if (added) set.add(listener);
+      else set.delete(listener);
+      host.dataset.pointerListeners = String(
+        [...listeners.values()].reduce((count, entries) => count + entries.size, 0),
+      );
+    };
+    const add = window.addEventListener.bind(window);
+    const remove = window.removeEventListener.bind(window);
+    window.addEventListener = (
+      type: string,
+      listener: EventListenerOrEventListenerObject,
+      options?: boolean | AddEventListenerOptions,
+    ) => {
+      update(type, listener, true);
+      add(type, listener, options);
+    };
+    window.removeEventListener = (
+      type: string,
+      listener: EventListenerOrEventListenerObject,
+      options?: boolean | EventListenerOptions,
+    ) => {
+      update(type, listener, false);
+      remove(type, listener, options);
+    };
+    host.dataset.pointerListeners = "0";
+  });
+}
+
 test("floating value is opt-in, keyboard-visible and preserves numeric form values", async ({
   page,
 }) => {
@@ -89,6 +128,105 @@ test("drag label follows the thumb, stays in bounds and keeps input/change seman
   expect(+(await slider.getAttribute("data-inputs"))!).toBeGreaterThan(0);
   await page.locator("#after").focus();
   await expect(slider.locator("[part=value-label]")).toBeHidden();
+});
+
+test("synchronous reparenting keeps an active drag and commits once", async ({ page }) => {
+  const slider = await ready(page);
+  await slider.evaluate((host) => {
+    const wrapper = document.createElement("div");
+    host.before(wrapper);
+    wrapper.append(host);
+    host.dataset.changes = "0";
+    host.addEventListener(
+      "change",
+      () => (host.dataset.changes = String(+host.dataset.changes! + 1)),
+    );
+  });
+  const box = (await slider.boundingBox())!;
+  const y = box.y + box.height / 2;
+  await page.mouse.move(box.x + box.width / 2, y);
+  await page.mouse.down();
+  await slider.evaluate((host) => {
+    host.addEventListener("input", () => host.parentElement!.append(host), { once: true });
+  });
+  await page.mouse.move(box.x + box.width * 0.75, y);
+  await page.mouse.move(box.x + box.width + 40, y);
+  await expect(slider).toHaveAttribute("aria-valuenow", "2");
+  await expect(slider.locator(".value-label.dragging")).toBeVisible();
+  await expect(slider).toHaveAttribute("data-changes", "0");
+  await page.mouse.up();
+  await expect(slider).toHaveAttribute("data-changes", "1");
+});
+
+for (const action of ["disable", "remove"] as const) {
+  for (const phase of ["the first input", "an active drag"] as const) {
+    test(`${action} during ${phase} leaves no global drag listeners`, async ({ page }) => {
+      const slider = await ready(page);
+      const handle = (await slider.elementHandle())!;
+      await countPointerListeners(slider);
+      const interrupt = () =>
+        slider.evaluate((host, action) => {
+          host.dataset.inputs = "0";
+          host.dataset.changes = "0";
+          host.addEventListener("input", () => {
+            host.dataset.inputs = String(+host.dataset.inputs! + 1);
+            if (action === "disable") host.setAttribute("disabled", "");
+            else host.remove();
+          });
+          host.addEventListener(
+            "change",
+            () => (host.dataset.changes = String(+host.dataset.changes! + 1)),
+          );
+        }, action);
+      const box = (await slider.boundingBox())!;
+      const y = box.y + box.height / 2;
+      if (phase === "the first input") await interrupt();
+      await page.mouse.move(box.x + box.width / 2, y);
+      await page.mouse.down();
+      if (phase === "an active drag") await interrupt();
+      await page.mouse.move(box.x + box.width + 40, y);
+      await page.mouse.up();
+      await handle.evaluate((host) => host.remove());
+      await expect
+        .poll(() =>
+          handle.evaluate((host) => ({
+            connected: host.isConnected,
+            inputs: host.dataset.inputs,
+            changes: host.dataset.changes,
+            listeners: host.dataset.pointerListeners,
+            dragging: !!host.shadowRoot!.querySelector(".value-label.dragging"),
+          })),
+        )
+        .toEqual({ connected: false, inputs: "1", changes: "0", listeners: "0", dragging: false });
+    });
+  }
+}
+
+test("pointer cancellation commits once and releases global drag listeners", async ({ page }) => {
+  const slider = await ready(page);
+  await countPointerListeners(slider);
+  await slider.evaluate((host) => {
+    host.dataset.changes = "0";
+    host.addEventListener("pointerdown", (event) => {
+      host.dataset.pointerId = String((event as PointerEvent).pointerId);
+    });
+    host.addEventListener(
+      "change",
+      () => (host.dataset.changes = String(+host.dataset.changes! + 1)),
+    );
+  });
+  const box = (await slider.boundingBox())!;
+  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+  await page.mouse.down();
+  await slider.evaluate((host) => {
+    window.dispatchEvent(
+      new PointerEvent("pointercancel", { pointerId: Number(host.dataset.pointerId) }),
+    );
+  });
+  await page.mouse.up();
+  await expect(slider).toHaveAttribute("data-changes", "1");
+  await expect(slider).toHaveAttribute("data-pointer-listeners", "0");
+  await expect(slider.locator(".value-label.dragging")).toHaveCount(0);
 });
 
 test("formatted text is safe, bounded after resize and restored after reconnect", async ({

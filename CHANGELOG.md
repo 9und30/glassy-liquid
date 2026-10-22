@@ -18,6 +18,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Fixed
 
+- Active slider drags survive synchronous DOM moves and still emit one commit. Disabling or removing a slider during its first input releases all global drag listeners.
+- The hero lens keeps clear of the comparison controls, player, and renderer note in short windows and with larger text.
+- Contextual dock actions reflow with enlarged text so their labels stay inside separate click targets.
 - Glass stays readable with `prefers-reduced-transparency: reduce` (macOS "Reduce transparency"). The opaque fill used to be light gray in every case, so white text on dark or clear glass disappeared. It now follows the appearance, light or dark, for both materials, and text and icons switch to the matching color. Glass without a backdrop or with a transparent fill stays see-through, the backdrop filter is skipped behind the opaque fill, the segmented track turns opaque too, and switch, slider, and selection thumbs stay solid instead of lifting into a lens. `MaterialSpec` has two new fields for this, `solid` and `solidForeground`.
 - Docs site: with reduced transparency the nav bar, the hero player, and the hero lens are readable again, and the current section is underlined instead of marked by a glass pill.
 - The Vue and Svelte quick starts in the README give `GlassScene` a height of `100vh`, like the React one. Without it the scene was only as tall as its controls and the rest of the page stayed blank white.

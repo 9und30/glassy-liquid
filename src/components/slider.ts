@@ -154,10 +154,10 @@ export class GlassSliderElement extends HTMLElementBase {
   disconnectedCallback(): void {
     this.removeEventListener("pointerdown", this.onDown);
     this.removeEventListener("keydown", this.onKey);
-    this.endDrag();
     this.ro?.disconnect();
     queueMicrotask(() => {
       if (this.isConnected) return;
+      this.endDrag();
       this.thumb?.destroy();
       this.thumb = null;
       this.removeTask?.();
@@ -268,10 +268,10 @@ export class GlassSliderElement extends HTMLElementBase {
     this.valueLabel.classList.add("dragging");
     this.startValue = this.value_;
     this.thumb?.press();
-    this.track(e.clientX);
     window.addEventListener("pointermove", this.onMove);
     window.addEventListener("pointerup", this.onUp);
     window.addEventListener("pointercancel", this.onUp);
+    this.track(e.clientX);
   };
 
   private track(clientX: number): void {
@@ -280,9 +280,9 @@ export class GlassSliderElement extends HTMLElementBase {
     // Rubber-band slightly past the ends.
     const p = raw < 0 ? raw * 0.15 : raw > 1 ? 1 + (raw - 1) * 0.15 : raw;
     this.pos.to(p, springs.track);
+    if (this.step > 0) this.pos.to(clamp(p, -0.04, 1.04), springs.track);
     const span = this.max - this.min;
     this.setValue(this.min + clamp(p, 0, 1) * span, true, false, false);
-    if (this.step > 0) this.pos.to(clamp(p, -0.04, 1.04), springs.track);
   }
 
   private onMove = (e: PointerEvent): void => {

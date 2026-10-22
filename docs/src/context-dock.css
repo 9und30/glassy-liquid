@@ -1,4 +1,5 @@
-/* Hallmark · component: context dock · genre: editorial · theme: limestone and copper */
+/* Hallmark · component: context dock · genre: editorial · theme: limestone and copper
+ * Pre-emit critique: P5 H4 E5 S5 R5 V4. */
 .context-dock { padding-block: var(--space-md) var(--space-section); }
 .context-dock__head {
   display: grid;
@@ -79,6 +80,9 @@
 .context-dock__summary span { color: var(--color-muted); font-weight: 400; }
 .context-dock__actions {
   --glass-group-padding: 4px;
+  flex-wrap: wrap;
+  justify-content: center;
+  height: auto;
   max-width: 100%;
   color: var(--color-ink);
 }

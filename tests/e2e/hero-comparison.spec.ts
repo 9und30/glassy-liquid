@@ -139,6 +139,45 @@ test.describe("hero material comparison", () => {
     }
   });
 
+  for (const { width, height, fontSize } of [
+    { width: 1024, height: 500, fontSize: 16 },
+    { width: 1024, height: 600, fontSize: 16 },
+    { width: 1200, height: 600, fontSize: 24 },
+  ]) {
+    test(`keeps the resting lens clear at ${width}x${height} with ${fontSize}px text`, async ({
+      page,
+    }) => {
+      await page.setViewportSize({ width, height });
+      await page.goto("/index.html");
+      await ready(page);
+      await page.evaluate((size) => {
+        document.documentElement.style.fontSize = `${size}px`;
+      }, fontSize);
+      await expect
+        .poll(() =>
+          page.evaluate(() => {
+            const box = (selector: string) =>
+              document.querySelector(selector)!.getBoundingClientRect();
+            const hero = box("#top");
+            const lens = box("#hero-lens");
+            const overlap = (a: DOMRect, b: DOMRect) =>
+              Math.min(a.right, b.right) - Math.max(a.left, b.left) > 1 &&
+              Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top) > 1;
+            return (
+              lens.left >= hero.left &&
+              lens.right <= hero.right &&
+              lens.top >= hero.top &&
+              lens.bottom <= hero.bottom &&
+              ["#hero-comparison", "#hero-player", ".hero__engine", ".hero__kicker"].every(
+                (selector) => !overlap(lens, box(selector)),
+              )
+            );
+          }),
+        )
+        .toBe(true);
+    });
+  }
+
   test("explains reduced transparency and resumes the selected material", async ({
     page,
     browserName,

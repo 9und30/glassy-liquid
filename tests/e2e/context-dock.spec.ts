@@ -1,5 +1,7 @@
 import { expect, test, type Page } from "@playwright/test";
 
+test.use({ screenshot: "off", trace: "off" });
+
 async function openDock(page: Page): Promise<void> {
   await page.goto("/index.html");
   await expect(page.locator("[data-context-primary]")).not.toHaveAttribute("disabled", "");
@@ -112,6 +114,34 @@ test.describe("context dock", () => {
         };
       });
       expect(layout, `context dock at ${width}px`).toEqual({ overflow: 0, outside: 0 });
+    }
+  });
+
+  test("keeps enlarged action labels inside their separate click targets", async ({ page }) => {
+    await openDock(page);
+    const dock = page.locator("[data-context-dock]");
+    await dock.locator("[data-context-secondary]").click();
+    await dock.locator("[data-context-primary]").click();
+    await page.evaluate(() => {
+      document.documentElement.style.fontSize = "32px";
+    });
+    for (const width of [320, 375, 414, 768]) {
+      await page.setViewportSize({ width, height: 900 });
+      const labelsOutsideTargets = await dock.locator("glass-button").evaluateAll((buttons) =>
+        buttons.flatMap((button) => {
+          const range = document.createRange();
+          range.selectNodeContents(button);
+          const text = range.getBoundingClientRect();
+          const target = button.getBoundingClientRect();
+          const outside =
+            text.left < target.left - 1 ||
+            text.right > target.right + 1 ||
+            text.top < target.top - 1 ||
+            text.bottom > target.bottom + 1;
+          return outside ? [button.textContent] : [];
+        }),
+      );
+      expect(labelsOutsideTargets, `enlarged dock labels at ${width}px`).toEqual([]);
     }
   });
 

@@ -248,6 +248,9 @@ function wireLens(scope: Scope): void {
   });
   const deck = hero.querySelector<HTMLElement>(".deck");
   const engine = hero.querySelector<HTMLElement>(".hero__engine");
+  const badge = hero.querySelector<HTMLElement>(".hero__kicker");
+  const minHeight = hero.style.minHeight;
+  scope.add(() => { hero.style.minHeight = minHeight; });
   let fx = 0.62;
   let fy = 0.42;
   let moved = false;
@@ -264,7 +267,9 @@ function wireLens(scope: Scope): void {
   const apply = () => {
     const s = lens.offsetWidth || 160;
     const w = hero.clientWidth;
-    const h = hero.clientHeight;
+    const floatingComparison = comparison && getComputedStyle(comparison).position === "absolute";
+    if (!moved || !floatingComparison) hero.style.minHeight = minHeight;
+    let h = hero.clientHeight;
     let minX = 12;
     let maxX = w - s - 12;
     // At 320 the resting lens crosses the volume badge. Nudge it right.
@@ -280,16 +285,31 @@ function wireLens(scope: Scope): void {
     let x = Math.max(minX, Math.min(maxX, fx * w - s / 2));
     let y = Math.max(72, Math.min(h - s - 48, fy * h - s / 2));
     if (!moved) {
-      // Keep the resting lens clear of the comparison, player and engine note.
-      for (const el of [comparison, deck, engine]) {
-        if (!el || !el.offsetWidth) continue;
-        const r = local(el);
-        const hit = x < r.right + 12 && x + s > r.left - 12 && y < r.bottom + 12 && y + s > r.top - 12;
-        if (!hit) continue;
-        if (el === comparison && r.top < h / 2) y = r.bottom + 12;
-        else if (r.right + 20 + s <= w - 12) x = r.right + 20;
-        else y = Math.max(72, r.top - s - 12);
+      // Check every obstacle together: moving clear of one can cross another.
+      const place = () => {
+        const obstacles = [comparison, deck, engine, badge]
+          .filter((el): el is HTMLElement => !!el?.offsetWidth).map(local);
+        const clear = (left: number, top: number) => left >= minX && left <= maxX && top >= 72 && top <= h - s - 12
+          && obstacles.every((r) => left + s <= r.left - 12 || left >= r.right + 12 || top + s <= r.top - 12 || top >= r.bottom + 12);
+        if (clear(x, y)) return { x, y };
+        let best: { x: number; y: number; distance: number } | null = null;
+        const xs = [x, minX, maxX, ...obstacles.flatMap((r) => [r.left - s - 12, r.right + 12])];
+        const ys = [y, 72, h - s - 12, ...obstacles.flatMap((r) => [r.top - s - 12, r.bottom + 12])];
+        for (const left of xs) for (const top of ys) {
+          const distance = (left - x) ** 2 + (top - y) ** 2;
+          if ((!best || distance < best.distance) && clear(left, top)) best = { x: left, y: top, distance };
+        }
+        return best;
+      };
+      let position = place();
+      if (!position && floatingComparison && engine) {
+        // Large text can leave no full-size slot; grow the photo only then.
+        const bottom = h - local(engine).bottom;
+        hero.style.minHeight = `${Math.ceil(local(comparison).bottom + s + 24 + engine.offsetHeight + bottom)}px`;
+        h = hero.clientHeight;
+        position = place();
       }
+      if (position) ({ x, y } = position);
     }
     lens.style.setProperty("--lens-x", `${x.toFixed(1)}px`);
     lens.style.setProperty("--lens-y", `${y.toFixed(1)}px`);
@@ -306,7 +326,6 @@ function wireLens(scope: Scope): void {
     ),
   );
   ro.observe(hero);
-  const badge = hero.querySelector(".hero__kicker");
   if (badge) ro.observe(badge);
   if (deck) ro.observe(deck);
   if (comparison) ro.observe(comparison);
