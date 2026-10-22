@@ -9,6 +9,9 @@
  *   .t  tint (colored glass)
  *   .r  specular rim light (9-slice border-image)
  *   .g  interactive illumination following the finger
+ *
+ * With reduced transparency the surface sets --gl-solid where the glass turns
+ * opaque. Nothing shows through it then, so the backdrop filter is skipped.
  */
 export const fxCss = /* css */ `
 gl-fx{position:absolute;inset:0;z-index:-1;display:block;pointer-events:none;border-radius:inherit;}
@@ -26,7 +29,7 @@ gl-fx>.g>i{position:absolute;left:0;top:0;width:var(--gl-glow-size,120px);height
   translate:calc(var(--gl-glow-x,50%) - 50%) calc(var(--gl-glow-y,50%) - 50%);
   background:radial-gradient(closest-side,rgba(255,255,255,var(--gl-glow-core,.5)),rgba(255,255,255,calc(var(--gl-glow-core,.5)*.35)) 55%,rgba(255,255,255,0));}
 gl-fx>svg{position:absolute;inset:auto;width:0;height:0;overflow:hidden;}
-@media (prefers-reduced-transparency: reduce){gl-fx>.b{background-color:var(--gl-solid,rgba(242,242,247,.96));}}
+@media (prefers-reduced-transparency: reduce){gl-fx>.b{background-color:var(--gl-solid,var(--gl-fill,transparent));-webkit-backdrop-filter:none!important;backdrop-filter:none!important;}gl-fx>.b>canvas{display:none;}}
 @media (forced-colors: active){gl-fx>.b{background:Canvas;border:1px solid CanvasText;box-shadow:none;}gl-fx>.r,gl-fx>.g,gl-fx>.t{display:none;}}
 `;
 

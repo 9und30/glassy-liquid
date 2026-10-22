@@ -121,7 +121,7 @@ Pick the e2e specs that match the change while iterating:
 | You changed                                   | Run at least                                                                                      |
 | --------------------------------------------- | ------------------------------------------------------------------------------------------------- |
 | A component's rendering or interaction        | `tests/e2e/components.spec.ts`, `interaction.spec.ts`, `menu-icons.spec.ts`, `legibility.spec.ts` |
-| The engine, materials, or a renderer          | `tests/e2e/engines.spec.ts`, `layout.spec.ts`, `contrast.spec.ts`                                 |
+| The engine, materials, or a renderer          | `tests/e2e/engines.spec.ts`, `layout.spec.ts`, `contrast.spec.ts`, `reduced-transparency.spec.ts` |
 | A framework binding or SSR                    | the unit tests, then `tests/e2e/examples.spec.ts`                                                 |
 | The docs site, navigation, or the hero player | `tests/e2e/docs.spec.ts`, `navigation.spec.ts`, `player.spec.ts`, `static-site.spec.ts`           |
 | README code samples                           | `npm run build`, then `tests/e2e/readme-snippets.spec.ts`                                         |

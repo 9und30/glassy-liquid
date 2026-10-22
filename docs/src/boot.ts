@@ -199,6 +199,12 @@ function wireLens(scope: Scope): void {
   if (!hero || !lens) return;
   lens.style.position = "absolute";
   const surface = glass(lens, { radius: "circle", material: "clear", zoom: 1.18, refraction: 30, bezel: 42, dispersion: 0.35, specular: 1.15 });
+  // With reduced transparency an opaque lens would be a blank disc. A
+  // transparent fill keeps it a ring of rim light that still drags over the photo.
+  const reducedTransparency = matchMedia("(prefers-reduced-transparency: reduce)");
+  const fill = () => surface.set({ fill: reducedTransparency.matches ? "transparent" : undefined });
+  fill();
+  scope.on(reducedTransparency, "change", fill);
   const press = attachPress(lens, surface, { grow: 0.05 });
   scope.add(() => {
     press.dispose();

@@ -903,6 +903,16 @@ glass-scene[data-loading]::part(backdrop), .hero[data-loading] .hero__photo { op
   .reveal { opacity: 1; transform: none; }
 }
 
+/* Reduced transparency: the glass turns opaque, light or dark by its appearance.
+   Nav and player text follow the glass foreground, and the plain underline
+   marks the current section instead of the glass pill. */
+@media (prefers-reduced-transparency: reduce) {
+  .nav__bar { --nav-fg: var(--gl-fg); --nav-fg-2: var(--gl-fg); }
+  .deck { color: var(--gl-fg); --glass-foreground: var(--gl-fg); --glass-accent-text: var(--gl-fg); }
+  .nav__pill { display: none; }
+  .nav__links[data-indicator] .nav__link[aria-current="page"] { box-shadow: inset 0 -2px 0 var(--color-accent); }
+}
+
 @media (max-width: 420px) {
   .opener { padding-block: 2.25rem 1.5rem; }
   .opener h1 { font-size: clamp(2.85rem, 14vw, 3.8rem); }

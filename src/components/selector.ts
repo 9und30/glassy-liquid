@@ -87,11 +87,13 @@ interface Geometry {
 
 // Items (z-index 1) sit above the lens: its glass shows what lies behind the
 // control, the labels are drawn crisp on top and magnified as it passes.
+// With reduced transparency the pill never turns into glass, it only moves.
 const baseCss = /* css */ `
 :host{display:flex;align-items:stretch;position:relative;padding:var(--glass-selector-padding,4px);user-select:none;-webkit-user-select:none;touch-action:pan-y;}
 .lens,.pill{position:absolute;left:0;top:0;pointer-events:none;will-change:transform;}
 .pill,.lens{z-index:0;}
 slot{display:contents;}
+@media (prefers-reduced-transparency: reduce){.lens{display:none;}.pill{opacity:1!important;}}
 `;
 
 export abstract class GlassSelectorElement extends GlassElement {
@@ -508,6 +510,8 @@ const segmentedCss = /* css */ `
 ::slotted(glass-segment){padding:0 14px;}
 .pill{background:var(--glass-segmented-thumb,#fff);box-shadow:0 3px 8px rgba(0,0,0,.12),0 3px 1px rgba(0,0,0,.04);}
 :host([data-appearance=dark]) .pill{background:var(--glass-segmented-thumb,#636366);}
+@media (prefers-reduced-transparency: reduce){.track{-webkit-backdrop-filter:none;backdrop-filter:none;background:var(--glass-segmented-track,#e3e3e8);}
+  :host([data-appearance=dark]) .track{background:var(--glass-segmented-track,#3a3a3c);}}
 `;
 
 export class GlassSegmentedElement extends GlassSelectorElement {

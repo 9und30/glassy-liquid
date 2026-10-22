@@ -1,7 +1,8 @@
 /**
  * ThumbLens - the iOS 26 control thumb: a solid white capsule at rest that
  * lifts into a clear, magnifying glass lens while touched. Used by switches
- * and sliders, and exported for custom controls.
+ * and sliders, and exported for custom controls. With reduced transparency
+ * the thumb stays solid and only grows.
  *
  * The lens element always has its lifted size; the resting state is a scale
  * transform, so the glass maps never need regenerating during the animation.
@@ -20,6 +21,7 @@ export const thumbCss = /* css */ `
 .gl-thumb{position:absolute;left:0;top:0;will-change:transform;pointer-events:none;}
 .gl-thumb>.solid{position:absolute;left:50%;top:50%;border-radius:999px;background:var(--glass-thumb,#fff);
   box-shadow:0 3px 8px rgba(0,0,0,.15),0 3px 1px rgba(0,0,0,.06),0 0 0 .5px rgba(0,0,0,.04);}
+@media (prefers-reduced-transparency: reduce){.gl-thumb>gl-fx{display:none;}.gl-thumb>.solid{opacity:1!important;}}
 `;
 
 export class ThumbLens {
