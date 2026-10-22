@@ -1,0 +1,115 @@
+/* Hallmark · component: context dock · genre: editorial · theme: limestone and copper */
+.context-dock { padding-block: var(--space-md) var(--space-section); }
+.context-dock__head {
+  display: grid;
+  gap: var(--space-lg);
+  align-items: end;
+  margin-bottom: var(--space-xl);
+}
+.context-dock__head h2 { max-width: 12ch; font-size: var(--text-3xl); overflow-wrap: anywhere; }
+.context-dock__head p { max-width: 32rem; color: var(--color-muted); }
+.context-dock__photos {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-lg) var(--space-sm);
+  list-style: none;
+}
+.context-dock__photos li, .context-dock figure { min-width: 0; margin: 0; }
+.context-dock__select {
+  display: block;
+  position: relative;
+  width: 100%;
+  min-height: 44px;
+  aspect-ratio: 4 / 3;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: var(--color-paper-3);
+  overflow: hidden;
+}
+.context-dock__select img { width: 100%; height: 100%; object-fit: cover; }
+.context-dock__select[aria-pressed="true"] { box-shadow: 0 0 0 3px var(--color-accent); }
+.context-dock__select:focus-visible { outline: 3px solid var(--color-focus); outline-offset: 5px; }
+.context-dock__check {
+  position: absolute;
+  inset: var(--space-xs) var(--space-xs) auto auto;
+  display: grid;
+  place-items: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 1px solid var(--color-on-photo);
+  border-radius: 50%;
+  background: var(--color-chip);
+  color: var(--color-on-photo);
+}
+.context-dock__check [data-icon] { opacity: 0; }
+.context-dock__select[aria-pressed="true"] .context-dock__check { background: var(--color-accent); }
+.context-dock__select[aria-pressed="true"] .context-dock__check [data-icon] { opacity: 1; }
+.context-dock__select:disabled { cursor: default; }
+.context-dock__select:disabled .context-dock__check { display: none; }
+.context-dock figcaption { min-height: 3.75rem; padding-top: var(--space-sm); }
+.context-dock__title { display: block; font-size: var(--text-base); font-weight: 500; overflow-wrap: anywhere; }
+.context-dock__favorite {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  color: var(--color-accent);
+  font-size: var(--text-xs);
+}
+.context-dock [hidden] { display: none !important; }
+.context-dock__toolbar {
+  --glass-accent-text: var(--color-ink);
+  --glass-foreground: var(--color-ink);
+  --glass-toolbar-gap: var(--space-md);
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: var(--space-lg);
+  padding-block: var(--space-lg);
+  border-top: 1px solid var(--color-rule);
+  border-bottom: 1px solid var(--color-rule);
+  color: var(--color-ink);
+}
+.context-dock__summary {
+  display: flex;
+  flex-basis: 100%;
+  justify-content: center;
+  gap: var(--space-sm);
+  font-weight: 600;
+}
+.context-dock__summary span { color: var(--color-muted); font-weight: 400; }
+.context-dock__actions {
+  --glass-group-padding: 4px;
+  max-width: 100%;
+  color: var(--color-ink);
+}
+.context-dock__actions glass-button {
+  --glass-button-font-size: var(--text-sm);
+  --glass-button-padding: 12px;
+  white-space: nowrap;
+}
+.context-dock__note { margin-top: var(--space-sm); color: var(--color-muted); font-size: var(--text-sm); text-align: center; }
+@media (hover: hover) {
+  .context-dock__select:not(:disabled):hover img { opacity: 0.88; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .context-dock__select img, .context-dock__check [data-icon] { transition: opacity 150ms var(--ease); }
+  .context-dock__select:not(:disabled):active img { transform: scale(0.98); }
+}
+@media (min-width: 48rem) {
+  .context-dock__head { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); }
+  .context-dock__photos { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-md); }
+  .context-dock__toolbar { justify-content: space-between; }
+  .context-dock__summary { flex-basis: auto; }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .context-dock__actions { background: var(--color-paper-2); border-radius: 999px; }
+}
+@media (forced-colors: active) {
+  .context-dock__select { border: 1px solid ButtonText; }
+  .context-dock__select[aria-pressed="true"] { outline: 3px solid Highlight; outline-offset: 2px; }
+  .context-dock__select:focus-visible { outline: 3px solid Highlight; outline-offset: 5px; }
+  .context-dock__check { background: Canvas; color: CanvasText; border-color: CanvasText; }
+  .context-dock__select[aria-pressed="true"] .context-dock__check { background: Highlight; color: HighlightText; }
+  .context-dock__actions { border: 1px solid ButtonText; border-radius: 999px; }
+  .context-dock__favorite { color: CanvasText; }
+}

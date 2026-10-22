@@ -6,7 +6,7 @@
  * <glass-slider min="0" max="100" value="40" aria-label="Volume"></glass-slider>
  * <glass-slider step="25" ticks></glass-slider>
  * ```
- * Attributes: min, max, step, value, ticks, disabled, name. Events: `input`
+ * Attributes: min, max, step, value, ticks, show-value, disabled, name. Events: `input`
  * (while dragging), `change` (on commit). Form-associated.
  */
 import { Spring, clamp, springs } from "../core/spring.js";
@@ -31,18 +31,25 @@ const css = /* css */ `
 .fill{position:absolute;left:0;top:0;bottom:0;width:100%;border-radius:999px;background:var(--glass-accent,#0a84ff);transform-origin:0 50%;transform:scaleX(0);}
 .ticks{position:absolute;left:${TW / 2}px;right:${TW / 2}px;top:50%;height:0;}
 .ticks i{position:absolute;top:-2px;width:4px;height:4px;margin-left:-2px;border-radius:50%;background:rgba(120,120,128,.55);}
+.value-label{position:absolute;left:0;bottom:calc(100% + 8px);max-width:100%;padding:4px 9px;border-radius:999px;
+  background:var(--glass-thumb,#fff);color:#1d1d1f;box-shadow:0 2px 8px rgba(0,0,0,.16);font-size:12px;font-weight:600;line-height:18px;
+  font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;pointer-events:none;visibility:hidden;text-shadow:none;}
+:host([data-appearance=dark]) .value-label{background:#2c2c2e;color:#f5f5f7;}
+:host([show-value]:not([disabled]):focus-visible) .value-label,:host([show-value]:not([disabled])) .value-label.dragging{visibility:visible;}
+@media (forced-colors:active){.value-label{background:Canvas!important;color:CanvasText!important;border:1px solid CanvasText;box-shadow:none;}}
 `;
 
 export class GlassSliderElement extends HTMLElementBase {
   static formAssociated = true;
   static get observedAttributes(): string[] {
-    return ["min", "max", "step", "value", "ticks", "disabled"];
+    return ["min", "max", "step", "value", "ticks", "show-value", "aria-valuetext", "disabled"];
   }
 
   private shadow: ShadowRoot;
   private internals: ElementInternals | null;
   private fill!: HTMLElement;
   private ticksEl!: HTMLElement;
+  private valueLabel!: HTMLElement;
   private thumb: ThumbLens | null = null;
   private pos = new Spring(0, springs.snap);
   private drag: { id: number; offset: number } | null = null;
@@ -86,6 +93,12 @@ export class GlassSliderElement extends HTMLElementBase {
   set value(v: number) {
     this.setValue(v, false, true);
   }
+  get showValue(): boolean {
+    return this.hasAttribute("show-value");
+  }
+  set showValue(v: boolean) {
+    this.toggleAttribute("show-value", !!v);
+  }
   get valueAsNumber(): number {
     return this.value_;
   }
@@ -101,6 +114,8 @@ export class GlassSliderElement extends HTMLElementBase {
       const cx = TW / 2 + clamp(this.pos.value, -0.04, 1.04) * travel;
       this.thumb.update(dt, cx, HEIGHT / 2, this.pos.velocity * travel);
       this.fill.style.transform = `scaleX(${(Math.max(0, cx) / Math.max(1, this.width)).toFixed(5)})`;
+      if (this.showValue)
+        this.valueLabel.style.transform = `translateX(clamp(0px,calc(${cx.toFixed(2)}px - 50%),calc(${this.width}px - 100%)))`;
       return !!this.drag || !this.pos.settled || !this.thumb.settled;
     },
   };
@@ -108,9 +123,10 @@ export class GlassSliderElement extends HTMLElementBase {
   connectedCallback(): void {
     if (!this.initialized) {
       adoptStyles(this.shadow, hostCss, thumbCss, css);
-      this.shadow.innerHTML = `<span class="track" part="track"><span class="fill" part="fill"></span></span><span class="ticks" part="ticks"></span>`;
+      this.shadow.innerHTML = `<span class="track" part="track"><span class="fill" part="fill"></span></span><span class="ticks" part="ticks"></span><span class="value-label" part="value-label" aria-hidden="true"></span>`;
       this.fill = this.shadow.querySelector(".fill")!;
       this.ticksEl = this.shadow.querySelector(".ticks")!;
+      this.valueLabel = this.shadow.querySelector(".value-label")!;
       this.value_ = this.clampValue(parseFloat(this.getAttribute("value") ?? "") || this.min);
       this.pos.set(this.fraction(this.value_));
       this.initialized = true;
@@ -138,6 +154,7 @@ export class GlassSliderElement extends HTMLElementBase {
   disconnectedCallback(): void {
     this.removeEventListener("pointerdown", this.onDown);
     this.removeEventListener("keydown", this.onKey);
+    this.endDrag();
     this.ro?.disconnect();
     queueMicrotask(() => {
       if (this.isConnected) return;
@@ -159,9 +176,13 @@ export class GlassSliderElement extends HTMLElementBase {
       this.setValue(this.value_, false, true);
       this.renderTicks();
     } else if (name === "ticks") this.renderTicks();
-    else if (name === "disabled") {
+    else if (name === "show-value" || name === "aria-valuetext") {
+      this.syncValueLabel();
+      wake(this.task);
+    } else if (name === "disabled") {
       this.tabIndex = this.hasAttribute("disabled") ? -1 : 0;
       this.setAttribute("aria-disabled", String(this.hasAttribute("disabled")));
+      if (this.hasAttribute("disabled")) this.endDrag();
     }
   }
 
@@ -207,6 +228,12 @@ export class GlassSliderElement extends HTMLElementBase {
     this.setAttribute("aria-valuemax", String(this.max));
     this.setAttribute("aria-valuenow", String(this.value_));
     this.internals?.setFormValue(String(this.value_));
+    this.syncValueLabel();
+  }
+
+  private syncValueLabel(): void {
+    if (this.valueLabel)
+      this.valueLabel.textContent = this.getAttribute("aria-valuetext") ?? String(this.value_);
   }
 
   private setValue(v: number, user: boolean, animate: boolean, commit = true): void {
@@ -238,6 +265,7 @@ export class GlassSliderElement extends HTMLElementBase {
     // Grabbing the thumb keeps its offset; tapping the track jumps there.
     const onThumb = Math.abs(f - this.pos.value) * travel < TW / 2 + 4;
     this.drag = { id: e.pointerId, offset: onThumb ? this.pos.value - f : 0 };
+    this.valueLabel.classList.add("dragging");
     this.startValue = this.value_;
     this.thumb?.press();
     this.track(e.clientX);
@@ -251,7 +279,7 @@ export class GlassSliderElement extends HTMLElementBase {
     const raw = this.fractionAt(clientX) + this.drag.offset;
     // Rubber-band slightly past the ends.
     const p = raw < 0 ? raw * 0.15 : raw > 1 ? 1 + (raw - 1) * 0.15 : raw;
-    this.pos.to(this.step > 0 ? p : p, springs.track);
+    this.pos.to(p, springs.track);
     const span = this.max - this.min;
     this.setValue(this.min + clamp(p, 0, 1) * span, true, false, false);
     if (this.step > 0) this.pos.to(clamp(p, -0.04, 1.04), springs.track);
@@ -264,17 +292,24 @@ export class GlassSliderElement extends HTMLElementBase {
 
   private onUp = (e: PointerEvent): void => {
     if (!this.drag || e.pointerId !== this.drag.id) return;
+    this.endDrag();
+    if (this.value_ !== this.startValue) this.dispatchEvent(new Event("change", { bubbles: true }));
+  };
+
+  private endDrag(): void {
+    if (!this.drag) return;
     this.drag = null;
+    this.valueLabel.classList.remove("dragging");
     window.removeEventListener("pointermove", this.onMove);
     window.removeEventListener("pointerup", this.onUp);
     window.removeEventListener("pointercancel", this.onUp);
     this.thumb?.release();
     this.pos.to(this.fraction(this.value_), springs.snap);
-    if (this.value_ !== this.startValue) this.dispatchEvent(new Event("change", { bubbles: true }));
     wake(this.task);
-  };
+  }
 
   private onKey = (e: KeyboardEvent): void => {
+    if (this.hasAttribute("disabled")) return;
     const span = this.max - this.min;
     const step = this.step || span / 100;
     let v = this.value_;

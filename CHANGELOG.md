@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+### Added
+
+- Sliders can opt into a floating value label with `show-value` (`showValue` in React, Vue, and Svelte). The label appears while dragging or using the keyboard and uses `aria-valuetext` when supplied.
+- The docs hero has a Glass/Frost comparison that keeps the lens in place and shows the difference between refraction and blur.
+- A contextual dock demo shows how the existing toolbar and buttons adapt to photo selection, sorting, and batch favorite actions.
+
 ### Changed
 
 - Glass more than a viewport off screen pauses. It skips re-renders for resizes and for option, appearance, and pixel ratio changes, and catches up a viewport before it scrolls back in. A `<glass-scene>` off screen stops its frame loop, also for video backdrops, and a scene on screen skips WebGL draws for its glass that is far off screen. The new read-only `surface.offscreen` tells whether a surface is paused. Without `IntersectionObserver` (server, old engines) nothing pauses.

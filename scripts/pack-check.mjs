@@ -1,7 +1,7 @@
 // Fail when `npm pack` would ship tests, benchmarks, docs sources, or scratch files.
-import { execFileSync } from "node:child_process";
+import { execSync } from "node:child_process";
 
-const raw = execFileSync("npm", ["pack", "--dry-run", "--json"], { encoding: "utf8" });
+const raw = execSync("npm pack --dry-run --json", { encoding: "utf8" });
 // `prepare` logs land on stdout ahead of the pretty-printed JSON document.
 const start = raw.lastIndexOf("\n[\n");
 if (start === -1) {

@@ -180,11 +180,11 @@ const wifi = ref(true);
   {
     id: "slider",
     title: "Slider",
-    lede: "Drag the thumb and it turns into a magnifying lens over the track. Stepped sliders can show ticks. Keys: arrows, Page Up and Down, Home, End.",
+    lede: "Drag the thumb and it turns into a magnifying lens over the track. Add show-value for a floating value during drag or keyboard focus, or ticks for stepped values. Leave room above the control for the label. Keys: arrows, Page Up and Down, Home, End.",
     bg: "glacier",
     height: 300,
-    html: `<glass-surface radius="28" style="width:min(320px,100%);padding:18px;display:flex;flex-direction:column;gap:22px">
-  <glass-slider value="62" aria-label="Brightness"></glass-slider>
+    html: `<glass-surface radius="28" style="width:min(320px,100%);padding:42px 18px 18px;display:flex;flex-direction:column;gap:22px">
+  <glass-slider value="62" show-value aria-label="Brightness"></glass-slider>
   <glass-slider value="50" step="25" ticks aria-label="Speed"></glass-slider>
 </glass-surface>`,
     react: `import { useState } from "react";
@@ -195,7 +195,7 @@ export function Volume() {
   const [speed, setSpeed] = useState(50);
   return (
     <>
-      <GlassSlider value={volume} onValueChange={(value) => setVolume(Math.round(value))} aria-label="Volume" />
+      <GlassSlider value={volume} showValue onValueChange={(value) => setVolume(Math.round(value))} aria-label="Volume" />
       <p>{Math.round(volume)}</p>
       <GlassSlider value={speed} step={25} ticks onValueCommit={(value) => setSpeed(Math.round(value))} aria-label="Speed" />
     </>
@@ -212,7 +212,7 @@ function commit(value: number) {
 </script>
 
 <template>
-  <GlassSlider v-model:value="volume" aria-label="Volume" />
+  <GlassSlider v-model:value="volume" show-value aria-label="Volume" />
   <p>{{ Math.round(volume) }}</p>
   <GlassSlider v-model:value="speed" :step="25" ticks aria-label="Speed" @value-commit="commit" />
 </template>`,
@@ -225,7 +225,7 @@ function commit(value: number) {
   }
 </script>
 
-<GlassSlider bind:value={volume} aria-label="Volume" />
+<GlassSlider bind:value={volume} showValue aria-label="Volume" />
 <p>{Math.round(volume)}</p>
 <GlassSlider bind:value={speed} step={25} ticks aria-label="Speed" onValueCommit={commit} />`,
     props: [
@@ -233,6 +233,7 @@ function commit(value: number) {
       ["min / max", "number", "0 / 100", ""],
       ["step", "number", "continuous", "Snaps on release."],
       ["ticks", "boolean", "false", "Dots at every step."],
+      ["show-value", "boolean", "false", "Floating value during drag or keyboard focus. Uses aria-valuetext when set; update it with the value."],
     ],
     events: [
       ["input", "While dragging.", "React onValueChange. Vue @value-change or :onValueChange. Svelte onValueChange."],

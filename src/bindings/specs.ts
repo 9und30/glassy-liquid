@@ -209,6 +209,11 @@ export interface GlassSliderProps {
    */
   ticks?: boolean;
   /**
+   * Show a floating value while dragging or keyboard-focused.
+   * @defaultValue `false`
+   */
+  showValue?: boolean;
+  /**
    * Disables the control.
    * @defaultValue `false`
    */
@@ -456,7 +461,7 @@ export const specs = {
     events: { onCheckedChange: ["change", target<boolean>("checked")], onChange: ["change", same] },
   }),
   GlassSlider: spec<GlassSliderProps>("glass-slider", {
-    attrs: ["min", "max", "step", "ticks", "disabled", "name"],
+    attrs: ["min", "max", "step", "ticks", "showValue", "disabled", "name"],
     props: ["value"],
     defaults: { defaultValue: "value" },
     events: {

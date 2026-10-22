@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { readFileSync, readdirSync } from "node:fs";
+import { fileURLToPath } from "node:url";
 import * as react from "../../src/react/index";
 import * as vue from "../../src/vue/index";
 import * as svelteActions from "../../src/svelte/actions";
@@ -8,7 +9,7 @@ import { componentNames, modelEvents, propNames, specs } from "../../src/binding
 // @ts-expect-error plain .mjs script
 import { components as genComponents, component as genComponent } from "../../scripts/gen-svelte.mjs";
 
-const root = new URL("../../", import.meta.url).pathname;
+const root = fileURLToPath(new URL("../../", import.meta.url));
 const exported = (mod: object) =>
   Object.keys(mod)
     .filter((k) => /^Glass[A-Z]/.test(k) && k !== "GlassVueComponent")

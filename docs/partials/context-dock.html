@@ -1,0 +1,70 @@
+<section class="context-dock wrap" id="context-dock" aria-labelledby="context-dock-title" data-context-dock data-ground="light">
+  <div class="context-dock__head">
+    <h2 id="context-dock-title">Tools for the moment.</h2>
+    <p>Select a few photos. The glass dock changes from browsing tools to actions for your selection.</p>
+  </div>
+  <ul class="context-dock__photos" aria-label="Photo collection" data-context-photos>
+    <li data-context-photo data-title="Still water">
+      <figure>
+        <button class="context-dock__select" type="button" aria-label="Select Still water" aria-pressed="false" aria-describedby="context-water-favorite" disabled>
+          <img src="img/lake.webp" width="2048" height="1152" alt="" loading="lazy" />
+          <span class="context-dock__check" aria-hidden="true"><span data-icon="check"></span></span>
+        </button>
+        <figcaption>
+          <span class="context-dock__title">Still water</span>
+          <span class="context-dock__favorite" data-context-favorite hidden aria-hidden="true"><span data-icon="heartFill"></span>Favorite</span>
+          <span class="sr-only" id="context-water-favorite" data-context-description>Not a favorite</span>
+        </figcaption>
+      </figure>
+    </li>
+    <li data-context-photo data-title="Glacier folds">
+      <figure>
+        <button class="context-dock__select" type="button" aria-label="Select Glacier folds" aria-pressed="false" aria-describedby="context-glacier-favorite" disabled>
+          <img src="img/glacier.webp" width="2048" height="1152" alt="" loading="lazy" />
+          <span class="context-dock__check" aria-hidden="true"><span data-icon="check"></span></span>
+        </button>
+        <figcaption>
+          <span class="context-dock__title">Glacier folds</span>
+          <span class="context-dock__favorite" data-context-favorite hidden aria-hidden="true"><span data-icon="heartFill"></span>Favorite</span>
+          <span class="sr-only" id="context-glacier-favorite" data-context-description>Not a favorite</span>
+        </figcaption>
+      </figure>
+    </li>
+    <li data-context-photo data-title="City after dark">
+      <figure>
+        <button class="context-dock__select" type="button" aria-label="Select City after dark" aria-pressed="false" aria-describedby="context-city-favorite" disabled>
+          <img src="img/city.webp" width="2048" height="1152" alt="" loading="lazy" />
+          <span class="context-dock__check" aria-hidden="true"><span data-icon="check"></span></span>
+        </button>
+        <figcaption>
+          <span class="context-dock__title">City after dark</span>
+          <span class="context-dock__favorite" data-context-favorite hidden aria-hidden="true"><span data-icon="heartFill"></span>Favorite</span>
+          <span class="sr-only" id="context-city-favorite" data-context-description>Not a favorite</span>
+        </figcaption>
+      </figure>
+    </li>
+    <li data-context-photo data-title="Silk in motion">
+      <figure>
+        <button class="context-dock__select" type="button" aria-label="Select Silk in motion" aria-pressed="false" aria-describedby="context-silk-favorite" disabled>
+          <img src="img/silk.webp" width="2048" height="1152" alt="" loading="lazy" />
+          <span class="context-dock__check" aria-hidden="true"><span data-icon="check"></span></span>
+        </button>
+        <figcaption>
+          <span class="context-dock__title">Silk in motion</span>
+          <span class="context-dock__favorite" data-context-favorite hidden aria-hidden="true"><span data-icon="heartFill"></span>Favorite</span>
+          <span class="sr-only" id="context-silk-favorite" data-context-description>Not a favorite</span>
+        </figcaption>
+      </figure>
+    </li>
+  </ul>
+  <glass-toolbar class="context-dock__toolbar" aria-label="Photo actions" data-context-toolbar hidden>
+    <span class="context-dock__summary" data-context-summary>Browse <span>4 photos</span></span>
+    <glass-group class="context-dock__actions" aria-label="Collection actions" material="clear">
+      <glass-button variant="plain" data-context-primary disabled>Sort A-Z</glass-button>
+      <glass-button variant="plain" data-context-secondary disabled>Select all</glass-button>
+    </glass-group>
+  </glass-toolbar>
+  <p class="context-dock__note">Selections and favorites stay in this demo.</p>
+  <p class="sr-only" role="status" data-context-status></p>
+  <noscript><p class="context-dock__note">Enable JavaScript to select and favorite photos.</p></noscript>
+</section>
