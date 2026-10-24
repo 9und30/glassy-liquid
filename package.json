@@ -188,7 +188,7 @@
     "@arethetypeswrong/cli": "^0.18.5",
     "@axe-core/playwright": "^4.11.0",
     "@eslint/js": "^10.0.1",
-    "@playwright/test": "1.56",
+    "@playwright/test": "1.64",
     "@size-limit/file": "^13.1.1",
     "@sveltejs/vite-plugin-svelte": "^5.1.1",
     "@types/node": "^22.20.5",
